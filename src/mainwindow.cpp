@@ -67,7 +67,6 @@ MainWindow::MainWindow():QMainWindow()
 
 	// tool bars
 	connect(selectButton, SIGNAL(clicked()), this, SLOT(onSelectButton()));
-	connect(imageButton, SIGNAL(clicked()), this, SLOT(onImageButton()));
 	connect(numberButton, SIGNAL(clicked()), this, SLOT(onNumberButton()));
 
 	// numbers
@@ -75,6 +74,9 @@ MainWindow::MainWindow():QMainWindow()
 	connect(recomputeButton, SIGNAL(clicked()), this, SLOT(onRecomputeButton()));
 	connect(fontButton, SIGNAL(clicked()), this, SLOT(onFontButton()));
 	connect(colorButton, SIGNAL(clicked()), this, SLOT(onColorButton()));
+
+	// images
+	connect(imageButton, SIGNAL(clicked()), this, SLOT(onImageButton()));
 	connect(originForegroundColorButton, SIGNAL(clicked()), this, SLOT(onOriginForegroundColorButton()));
 	connect(finalForegroundColorButton, SIGNAL(clicked()), this, SLOT(onFinalForegroundColorButton()));
 
@@ -96,6 +98,10 @@ MainWindow::MainWindow():QMainWindow()
 
 	initSupportedFormats(true);
 	initSupportedFormats(false);
+
+	positionFrame->setVisible(false);
+	imageFrame->setVisible(false);
+	numberFrame->setVisible(false);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -310,11 +316,36 @@ void MainWindow::onFinalForegroundColorButton()
 
 void MainWindow::onItemDetailsChanged(const MapScene::MapItemDetails &details)
 {
-	xEdit->setText(QString::number(details.position.x()));
-	yEdit->setText(QString::number(details.position.y()));
+	if (details.position == QPoint(-1, -1))
+	{
+		// unselected
+		positionFrame->setVisible(false);
+		imageFrame->setVisible(false);
+		numberFrame->setVisible(false);
+	}
+	else
+	{
+		positionFrame->setVisible(true);
 
-	numberEdit->setText(QString::number(details.number));
-	imageEdit->setText(details.image);
+		// selected
+		xEdit->setText(QString::number(details.position.x()));
+		yEdit->setText(QString::number(details.position.y()));
+
+		if (details.number == -1)
+		{
+			imageEdit->setText(details.image);
+
+			imageFrame->setVisible(true);
+			numberFrame->setVisible(false);
+		}
+		else
+		{
+			numberEdit->setText(QString::number(details.number));
+
+			imageFrame->setVisible(false);
+			numberFrame->setVisible(true);
+		}
+	}
 }
 
 void MainWindow::setError(const QString &error)
