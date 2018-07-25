@@ -101,6 +101,7 @@ int main(int argc, char *argv[])
 		QCoreApplication::installTranslator(&qtTranslator);
 	}
 
+#if 0
 	CommandLine cmd;
 
 	QStringList argList = app->arguments();
@@ -115,6 +116,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	else
+#endif
 	{
 		if (qobject_cast<QApplication *>(app.data()))
 		{
