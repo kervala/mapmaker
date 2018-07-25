@@ -261,7 +261,6 @@ bool MapScene::save(const QString &filename)
 
 bool MapScene::importImage(const QString &filename, const QPointF &pos)
 {
-
 	ImageMapItem *item = new ImageMapItem(NULL);
 	item->setId(m_nextId);
 	item->setPos(pos);
@@ -414,6 +413,7 @@ void MapScene::onSelectionChanged()
 	{
 		MapItemDetails details;
 		details.number = -1;
+		details.position = QPoint(-1, -1);
 
 		emit itemDetailsChanged(details);
 	}
