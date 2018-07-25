@@ -30,10 +30,10 @@
         </rectf>
        </property>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <layout class="QHBoxLayout" name="toolsLayout" stretch="0,0,0,1,0,0">
+         <layout class="QHBoxLayout" name="toolsLayout" stretch="0,0,1,0,0,0,0,0">
           <item>
            <widget class="QToolButton" name="selectButton">
             <property name="text">
@@ -47,26 +47,6 @@
              <bool>true</bool>
             </property>
             <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
-            <property name="autoRaise">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="imageButton">
-            <property name="text">
-             <string>Image</string>
-            </property>
-            <property name="icon">
-             <iconset resource="../res/resources.qrc">
-              <normaloff>:/icons/image.png</normaloff>:/icons/image.png</iconset>
-            </property>
-            <property name="checkable">
              <bool>true</bool>
             </property>
             <property name="autoExclusive">
@@ -111,9 +91,29 @@
            </spacer>
           </item>
           <item>
+           <widget class="QToolButton" name="imageButton">
+            <property name="text">
+             <string>Add or change image</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/image.png</normaloff>:/icons/image.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="fontButton">
             <property name="text">
-             <string>Font</string>
+             <string>Numbers font</string>
             </property>
             <property name="icon">
              <iconset resource="../res/resources.qrc">
@@ -127,7 +127,35 @@
           <item>
            <widget class="QToolButton" name="colorButton">
             <property name="text">
-             <string>Color</string>
+             <string>Numbers color</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="originForegroundColorButton">
+            <property name="text">
+             <string>Origin foreground color</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="finalForegroundColorButton">
+            <property name="text">
+             <string>Final foreground color</string>
             </property>
             <property name="icon">
              <iconset resource="../res/resources.qrc">

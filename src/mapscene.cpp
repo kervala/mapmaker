@@ -114,13 +114,26 @@ bool MapScene::load(const QString &filename)
 	stream.setVersion(QDataStream::Qt_5_6);
 
 	QFont font;
+
+	// numbers font
 	stream >> font;
+	NumberMapItem::setFont(font);
 
 	QColor color;
-	stream >> color;
 
-	NumberMapItem::setFont(font);
+	// numbers colors
+	stream >> color;
 	NumberMapItem::setColor(color);
+
+	// foreground color
+	stream >> color;
+	ImageMapItem::setOriginForegroundColor(color);
+
+	stream >> color;
+	ImageMapItem::setFinalForegroundColor(color);
+
+	// background color
+	stream >> color;
 
 	stream >> m_nextNumber;
 	stream >> m_nextId;
@@ -197,6 +210,13 @@ bool MapScene::save(const QString &filename)
 	stream << NumberMapItem::getFont();
 	stream << NumberMapItem::getColor();
 
+	// foreground color
+	stream << ImageMapItem::getOriginForegroundColor(); // src
+	stream << ImageMapItem::getFinalForegroundColor(); // dst
+
+	// background color
+	stream << QColor();
+
 	stream << m_nextNumber;
 	stream << m_nextId;
 
@@ -241,11 +261,16 @@ bool MapScene::save(const QString &filename)
 
 bool MapScene::importImage(const QString &filename, const QPointF &pos)
 {
+
 	ImageMapItem *item = new ImageMapItem(NULL);
+	item->setId(m_nextId);
 	item->setPos(pos);
+
 	if (!item->importImage(filename)) return false;
 
 	addItem(item);
+
+	++m_nextId;
 
 	return true;
 }
@@ -282,38 +307,20 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	
 	if (mouseEvent->button() == Qt::LeftButton && m_mode != ModeSelect)
 	{
-		if (m_mode == ModeNumber)
+		QGraphicsItem *wbItem = itemAt(mouseEvent->scenePos(), QTransform());
+
+		ImageMapItem *parentItem = qgraphicsitem_cast<ImageMapItem*>(wbItem);
+
+		// only allow to put numbers on images
+		if (parentItem)
 		{
-			QGraphicsItem *wbItem = itemAt(mouseEvent->scenePos(), QTransform());
-
-			ImageMapItem *parentItem = qgraphicsitem_cast<ImageMapItem*>(wbItem);
-
-			// only allow to put numbers on images
-			if (parentItem)
-			{
-				NumberMapItem *item = new NumberMapItem(parentItem);
-				item->setId(m_nextId);
-				item->setPos(parentItem->mapFromParent(mouseEvent->scenePos()));
-				item->setNumber(m_nextNumber);
-				item->setParentId(parentItem->getId());
-
-				++m_nextNumber;
-				++m_nextId;
-
-				mustProcess = false;
-			}
-		}
-		else if (m_mode == ModeImage)
-		{
-			ImageMapItem *item = new ImageMapItem(NULL);
+			NumberMapItem *item = new NumberMapItem(parentItem);
 			item->setId(m_nextId);
+			item->setPos(parentItem->mapFromParent(mouseEvent->scenePos()));
+			item->setNumber(m_nextNumber);
+			item->setParentId(parentItem->getId());
 
-			// create image placeholder at the center of the cursor
-			QSizeF size = item->boundingRect().size() / 2;
-			item->setPos(mouseEvent->scenePos() - QPointF(size.width(), size.height()));
-
-			addItem(item);
-
+			++m_nextNumber;
 			++m_nextId;
 
 			mustProcess = false;
@@ -502,6 +509,19 @@ void MapScene::updateNumbers()
 		if (numberItem)
 		{
 			numberItem->updateNumber();
+		}
+	}
+}
+
+void MapScene::updateImages()
+{
+	foreach(QGraphicsItem *item, items())
+	{
+		ImageMapItem *imageItem = qgraphicsitem_cast<ImageMapItem*>(item);
+
+		if (imageItem)
+		{
+			imageItem->updateImage();
 		}
 	}
 }

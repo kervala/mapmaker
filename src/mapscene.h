@@ -28,7 +28,6 @@ public:
 	enum Mode
 	{
 		ModeSelect,
-		ModeImage,
 		ModeNumber
 	};
 
@@ -62,6 +61,7 @@ public:
 	bool changeSelectedImage(const QString &filename);
 
 	void updateNumbers();
+	void updateImages();
 
 	static QList<QByteArray> getImagesFormats(bool write);
 

@@ -24,6 +24,7 @@
 #include "logsdialog.h"
 #include "mapscene.h"
 #include "numbermapitem.h"
+#include "imagemapitem.h"
 
 #ifdef HAVE_CONFIG_H
 	#include "config.h"
@@ -70,6 +71,8 @@ MainWindow::MainWindow():QMainWindow()
 	connect(numberButton, SIGNAL(clicked()), this, SLOT(onNumberButton()));
 	connect(fontButton, SIGNAL(clicked()), this, SLOT(onFontButton()));
 	connect(colorButton, SIGNAL(clicked()), this, SLOT(onColorButton()));
+	connect(originForegroundColorButton, SIGNAL(clicked()), this, SLOT(onOriginForegroundColorButton()));
+	connect(finalForegroundColorButton, SIGNAL(clicked()), this, SLOT(onFinalForegroundColorButton()));
 
 	setInfo(tr("Starting %1").arg(PRODUCT));
 
@@ -94,9 +97,6 @@ MainWindow::MainWindow():QMainWindow()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 	hide();
-
-	// save current ISBN
-//	ConfigFile::getInstance()->setLastIsbn(isbnEdit->text());
 
 	event->accept();
 }
@@ -145,7 +145,10 @@ void MainWindow::onOpen()
 	if (filename.isEmpty())
 		return;
 
-	m_scene->load(filename);
+	if (!m_scene->load(filename))
+	{
+		setError(tr("Unable to load %1").arg(filename));
+	}
 }
 
 void MainWindow::onSave()
@@ -167,7 +170,10 @@ void MainWindow::onSaveAs()
 	if (filename.isEmpty())
 		return;
 
-	m_scene->save(filename);
+	if (!m_scene->save(filename))
+	{
+		setError(tr("Unable to save %1").arg(filename));
+	}
 }
 
 void MainWindow::onExport()
@@ -177,7 +183,10 @@ void MainWindow::onExport()
 	if (filename.isEmpty())
 		return;
 
-	m_scene->exportImage(filename);
+	if (!m_scene->exportImage(filename))
+	{
+		setError(tr("Unable to export map to image %1").arg(filename));
+	}
 }
 
 void MainWindow::onLogs(bool on)
@@ -201,22 +210,25 @@ void MainWindow::onSelectButton()
 	m_scene->setMode(MapScene::ModeSelect);
 }
 
+void MainWindow::onNumberButton()
+{
+	m_scene->setMode(MapScene::ModeNumber);
+}
+
 void MainWindow::onImageButton()
 {
-	m_scene->setMode(MapScene::ModeImage);
-
-	// TODO: when click, ask to load image
 	QString filename = QFileDialog::getOpenFileName(this, tr("Change image"), imageEdit->text(), m_supportedReadFormats);
 
 	if (filename.isEmpty())
 		return;
 
-	m_scene->changeSelectedImage(filename);
-}
-
-void MainWindow::onNumberButton()
-{
-	m_scene->setMode(MapScene::ModeNumber);
+	if (!m_scene->changeSelectedImage(filename))
+	{
+		if (!m_scene->importImage(filename))
+		{
+			setError(tr("Unable to open image %1").arg(filename));
+		}
+	}
 }
 
 void MainWindow::onFontButton()
@@ -246,6 +258,34 @@ void MainWindow::onColorButton()
 		NumberMapItem::setColor(newColor);
 
 		m_scene->updateNumbers();
+	}
+}
+
+void MainWindow::onOriginForegroundColorButton()
+{
+	QColor oldColor = ImageMapItem::getOriginForegroundColor();
+
+	QColor newColor = QColorDialog::getColor(oldColor, this, tr("Choose color for origin foreground"));
+
+	if (oldColor != newColor)
+	{
+		ImageMapItem::setOriginForegroundColor(newColor);
+
+		m_scene->updateImages();
+	}
+}
+
+void MainWindow::onFinalForegroundColorButton()
+{
+	QColor oldColor = ImageMapItem::getFinalForegroundColor();
+
+	QColor newColor = QColorDialog::getColor(oldColor, this, tr("Choose color for final foreground"));
+
+	if (oldColor != newColor)
+	{
+		ImageMapItem::setFinalForegroundColor(newColor);
+
+		m_scene->updateImages();
 	}
 }
 

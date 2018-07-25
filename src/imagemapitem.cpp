@@ -25,6 +25,9 @@
 	#define new DEBUG_NEW
 #endif
 
+QColor ImageMapItem::s_originForegroundColor;
+QColor ImageMapItem::s_finalForegroundColor;
+
 ImageMapItem::ImageMapItem(QGraphicsItem *parent):MapItem(parent)
 {
 	// placeholder
@@ -179,7 +182,20 @@ bool ImageMapItem::updateImage()
 	}
 	else
 	{
+		// reload image
 		if (!m_image.loadFromData(m_rawImage)) return false;
+
+		// colorize image
+		if (s_finalForegroundColor.isValid())
+		{
+
+			QBitmap mask = m_image.createMaskFromColor(s_originForegroundColor, Qt::MaskOutColor);
+
+			QPainter p(&m_image);
+			p.setPen(s_finalForegroundColor);
+			p.drawPixmap(m_image.rect(), mask, mask.rect());
+			p.end();
+		}
 
 		m_rect.setRight(m_image.width());
 		m_rect.setBottom(m_image.height());
@@ -191,6 +207,26 @@ bool ImageMapItem::updateImage()
 	update();
 
 	return true;
+}
+
+void ImageMapItem::setOriginForegroundColor(const QColor &color)
+{
+	s_originForegroundColor = color;
+}
+
+QColor ImageMapItem::getOriginForegroundColor()
+{
+	return s_originForegroundColor;
+}
+
+void ImageMapItem::setFinalForegroundColor(const QColor &color)
+{
+	s_finalForegroundColor = color;
+}
+
+QColor ImageMapItem::getFinalForegroundColor()
+{
+	return s_finalForegroundColor;
 }
 
 void ImageMapItem::serialize(QDataStream &stream) const

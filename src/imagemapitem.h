@@ -47,9 +47,16 @@ public:
 	void serialize(QDataStream &stream) const;
 	void unserialize(QDataStream &stream);
 
+	static void setOriginForegroundColor(const QColor &color);
+	static QColor getOriginForegroundColor();
+
+	static void setFinalForegroundColor(const QColor &color);
+	static QColor getFinalForegroundColor();
+
+	bool updateImage();
+
 protected:
 	QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-	bool updateImage();
 
 	QString m_filename;
 	QPainterPath m_path;
@@ -57,6 +64,9 @@ protected:
 	QPixmap m_image;
 //	QSvgRenderer m_svg;
 	QByteArray m_rawImage;
+
+	static QColor s_originForegroundColor;
+	static QColor s_finalForegroundColor;
 };
 
 QDataStream& operator << (QDataStream &stream, const ImageMapItem &item);

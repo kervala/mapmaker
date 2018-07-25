@@ -57,10 +57,12 @@ public slots:
 
 	// toolbar
 	void onSelectButton();
-	void onImageButton();
 	void onNumberButton();
+	void onImageButton();
 	void onFontButton();
 	void onColorButton();
+	void onOriginForegroundColorButton();
+	void onFinalForegroundColorButton();
 
 	void onItemDetailsChanged(const MapScene::MapItemDetails &details);
 
