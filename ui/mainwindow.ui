@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>937</width>
+    <height>758</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MapMaker</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QGraphicsView" name="graphicsView">
+       <property name="sceneRect">
+        <rectf>
+         <x>0.000000000000000</x>
+         <y>0.000000000000000</y>
+         <width>5000.000000000000000</width>
+         <height>5000.000000000000000</height>
+        </rectf>
+       </property>
+      </widget>
+      <widget class="QWidget" name="">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QHBoxLayout" name="toolsLayout" stretch="0,0,0,1,0,0">
+          <item>
+           <widget class="QToolButton" name="selectButton">
+            <property name="text">
+             <string>Select</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/select.png</normaloff>:/icons/select.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="imageButton">
+            <property name="text">
+             <string>Image</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/image.png</normaloff>:/icons/image.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="numberButton">
+            <property name="text">
+             <string>Number</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/number.png</normaloff>:/icons/number.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QToolButton" name="fontButton">
+            <property name="text">
+             <string>Font</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/font.png</normaloff>:/icons/font.png</iconset>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="colorButton">
+            <property name="text">
+             <string>Color</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="positionLabel">
+          <property name="text">
+           <string>Position</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="positionLayout">
+          <item>
+           <widget class="QLineEdit" name="xEdit"/>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="yEdit"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="numberLabel">
+          <property name="text">
+           <string>Number</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="numberEdit"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="numberLayout"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="imageLabel">
+          <property name="text">
+           <string>Image</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="imageEdit"/>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>13</width>
+            <height>13</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>937</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="actionExport"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionLogs"/>
+    <addaction name="actionAbout"/>
+    <addaction name="actionAboutQt"/>
+   </widget>
+   <widget class="QMenu" name="menuItems">
+    <property name="title">
+     <string>Items</string>
+    </property>
+    <addaction name="actionImportImages"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuItems"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionExit">
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>&amp;About...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
+   </property>
+  </action>
+  <action name="actionLogs">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Logs</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::ApplicationSpecificRole</enum>
+   </property>
+  </action>
+  <action name="actionImportImages">
+   <property name="text">
+    <string>Import images...</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>&amp;Open...</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>&amp;Save...</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>&amp;Export...</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Save as...</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../res/resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

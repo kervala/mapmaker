@@ -1,0 +1,507 @@
+/*
+ *  MapMaker is a map editor
+ *  Copyright (C) 2018  Cedric OCHS
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#include "common.h"
+#include "mapscene.h"
+#include "numbermapitem.h"
+#include "imagemapitem.h"
+
+struct SMagicHeader
+{
+	union
+	{
+		char str[5];
+		quint32 num;
+	};
+};
+
+SMagicHeader s_header = { "PAMK" };
+quint32 s_version = 1;
+
+#ifdef DEBUG_NEW
+	#define new DEBUG_NEW
+#endif
+
+MapScene::MapScene(QObject *parent):QGraphicsScene(parent), m_mode(ModeSelect), m_nextNumber(1), m_nextId(0)
+{
+	setSceneRect(0, 0, 5000, 5000);
+
+	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
+}
+
+MapScene::~MapScene()
+{
+}
+
+void MapScene::reset()
+{
+	m_nextNumber = 0;
+
+	clear();
+}
+
+bool MapScene::isEmpty() const
+{
+	return items().isEmpty();
+}
+
+MapScene::Mode MapScene::getMode() const
+{
+	return m_mode;
+}
+
+void MapScene::setMode(Mode mode)
+{
+	m_mode = mode;
+}
+
+QString MapScene::getFilename() const
+{
+	return m_filename;
+}
+
+bool MapScene::hasFilename() const
+{
+	return !m_filename.isEmpty();
+}
+
+bool MapScene::load(const QString &filename)
+{
+	if (filename.isEmpty()) return false;
+
+	m_filename = filename;
+
+	QFile file(filename);
+
+	if (!file.open(QIODevice::ReadOnly)) return false;
+
+	reset();
+
+	QDataStream stream(&file);
+
+	// Read and check the header
+	SMagicHeader header;
+
+	stream >> header.num;
+
+	if (header.num != s_header.num) return false;
+
+	// Read the version
+	quint32 version;
+	stream >> version;
+
+	if (version > s_version) return false;
+
+	// define version for items and other serialized objects
+	stream.device()->setProperty("version", version);
+
+	stream.setVersion(QDataStream::Qt_5_6);
+
+	QFont font;
+	stream >> font;
+
+	QColor color;
+	stream >> color;
+
+	NumberMapItem::setFont(font);
+	NumberMapItem::setColor(color);
+
+	stream >> m_nextNumber;
+	stream >> m_nextId;
+
+	qint32 imagesCount = 0;
+	stream >> imagesCount;
+
+	QMap<int, ImageMapItem*> imagesItems;
+
+	for (int i = 0; i < imagesCount; ++i)
+	{
+		ImageMapItem *imageItem = new ImageMapItem(NULL);
+		stream >> *imageItem;
+
+		imagesItems[imageItem->getId()] = imageItem;
+
+		addItem(imageItem);
+	}
+
+	qint32 numbersCount = 0;
+	stream >> numbersCount;
+
+	QMap<int, ImageMapItem*>::iterator it;
+
+	for (int i = 0; i < numbersCount; ++i)
+	{
+		NumberMapItem *numberItem = new NumberMapItem(NULL);
+		stream >> *numberItem;
+
+		it = imagesItems.find(numberItem->getParentId());
+
+		if (it != imagesItems.end())
+		{
+			// found a parent
+			numberItem->setParentItem(*it);
+		}
+		else
+		{
+			qDebug() << "Unable to find parent" << numberItem->getParentId();
+
+			delete numberItem;
+
+			continue;
+		}
+	}
+
+	return true;
+}
+
+bool MapScene::save(const QString &filename)
+{
+	QString newFilename = filename;
+
+	// no filename found
+	if (newFilename.isEmpty())
+	{
+		if (m_filename.isEmpty()) return false;
+
+		newFilename = m_filename;
+	}
+
+	QFile file(newFilename);
+
+	if (!file.open(QIODevice::WriteOnly)) return false;
+
+	QDataStream stream(&file);
+
+	// Write a header with a "magic number" and a version
+	stream << s_header.num;
+	stream << s_version;
+
+	stream.setVersion(QDataStream::Qt_5_6);
+
+	stream << NumberMapItem::getFont();
+	stream << NumberMapItem::getColor();
+
+	stream << m_nextNumber;
+	stream << m_nextId;
+
+	qint32 imagesCount = 0;
+	qint32 numbersCount = 0;
+
+	foreach(QGraphicsItem *item, items())
+	{
+		ImageMapItem *imageItem = qgraphicsitem_cast<ImageMapItem*>(item);
+		NumberMapItem *numberItem = qgraphicsitem_cast<NumberMapItem*>(item);
+
+		if (imageItem) ++imagesCount;
+		if (numberItem) ++numbersCount;
+	}
+
+	stream << imagesCount;
+
+	foreach(QGraphicsItem *item, items())
+	{
+		ImageMapItem *imageItem = qgraphicsitem_cast<ImageMapItem*>(item);
+
+		if (imageItem)
+		{
+			stream << *imageItem;
+		}
+	}
+
+	stream << numbersCount;
+
+	foreach(QGraphicsItem *item, items())
+	{
+		NumberMapItem *numberItem = qgraphicsitem_cast<NumberMapItem*>(item);
+
+		if (numberItem)
+		{
+			stream << *numberItem;
+		}
+	}
+
+	return true;
+}
+
+bool MapScene::importImage(const QString &filename, const QPointF &pos)
+{
+	ImageMapItem *item = new ImageMapItem(NULL);
+	item->setPos(pos);
+	if (!item->importImage(filename)) return false;
+
+	addItem(item);
+
+	return true;
+}
+
+bool MapScene::importImages(const QStringList &filenames)
+{
+	foreach(const QString &filename, filenames)
+	{
+		if (!importImage(filename)) return false;
+	}
+
+	return true;
+}
+
+bool MapScene::changeSelectedImage(const QString &filename)
+{
+	foreach(QGraphicsItem *item, selectedItems())
+	{
+		ImageMapItem *imageItem = qgraphicsitem_cast<ImageMapItem*>(item);
+
+		if (imageItem)
+		{
+			// only one item should be changed
+			return imageItem->importImage(filename);
+		}
+	}
+
+	return false;
+}
+
+void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+	bool mustProcess = true;
+	
+	if (mouseEvent->button() == Qt::LeftButton && m_mode != ModeSelect)
+	{
+		if (m_mode == ModeNumber)
+		{
+			QGraphicsItem *wbItem = itemAt(mouseEvent->scenePos(), QTransform());
+
+			ImageMapItem *parentItem = qgraphicsitem_cast<ImageMapItem*>(wbItem);
+
+			// only allow to put numbers on images
+			if (parentItem)
+			{
+				NumberMapItem *item = new NumberMapItem(parentItem);
+				item->setId(m_nextId);
+				item->setPos(parentItem->mapFromParent(mouseEvent->scenePos()));
+				item->setNumber(m_nextNumber);
+				item->setParentId(parentItem->getId());
+
+				++m_nextNumber;
+				++m_nextId;
+
+				mustProcess = false;
+			}
+		}
+		else if (m_mode == ModeImage)
+		{
+			ImageMapItem *item = new ImageMapItem(NULL);
+			item->setId(m_nextId);
+
+			// create image placeholder at the center of the cursor
+			QSizeF size = item->boundingRect().size() / 2;
+			item->setPos(mouseEvent->scenePos() - QPointF(size.width(), size.height()));
+
+			addItem(item);
+
+			++m_nextId;
+
+			mustProcess = false;
+		}
+	}
+
+	// manage standard mouse events
+	if (mustProcess) QGraphicsScene::mousePressEvent(mouseEvent);
+}
+
+void MapScene::keyPressEvent(QKeyEvent *keyEvent)
+{
+	if (keyEvent->key() == Qt::Key_Delete)
+	{
+		foreach(QGraphicsItem *item, selectedItems())
+		{
+			removeItem(item);
+
+			// items are not deleted automatically
+			delete item;
+		}
+	}
+}
+
+bool MapScene::isItemChange(int type)
+{
+	foreach(QGraphicsItem *item, selectedItems())
+	{
+		if (item->type() == type)
+			return true;
+	}
+
+	return false;
+}
+
+QList<QByteArray> MapScene::getImagesFormats(bool write)
+{
+	static QList<QByteArray> readFormats = QImageReader::supportedImageFormats();
+	static QList<QByteArray> writeFormats = QImageWriter::supportedImageFormats();
+
+	return write ? writeFormats : readFormats;
+}
+
+bool MapScene::isImage(const QString &filename)
+{
+	QString ext = QFileInfo(filename).suffix();
+
+	QList<QByteArray> formats = getImagesFormats(false);
+
+	foreach(const QByteArray &format, formats)
+		if (ext == format) return true;
+
+	return false;
+}
+
+bool MapScene::isProject(const QString &filename)
+{
+	QString ext = QFileInfo(filename).suffix();
+
+	return ext == "kmf";
+}
+
+void MapScene::onSelectionChanged()
+{
+	QList<QGraphicsItem*> items = selectedItems();
+
+	if (!items.isEmpty())
+	{
+		foreach(QGraphicsItem *item, items)
+		{
+			MapItemDetails details;
+			details.position = item->pos().toPoint();
+
+			ImageMapItem *imageItem = qgraphicsitem_cast<ImageMapItem*>(item);
+			NumberMapItem *numberItem = qgraphicsitem_cast<NumberMapItem*>(item);
+
+			if (imageItem)
+			{
+				details.image = imageItem->getFilename();
+				details.number = -1;
+			}
+			else if (numberItem)
+			{
+				details.number = numberItem->getNumber();
+			}
+
+			emit itemDetailsChanged(details);
+		}
+	}
+	else
+	{
+		MapItemDetails details;
+		details.number = -1;
+
+		emit itemDetailsChanged(details);
+	}
+}
+
+bool MapScene::acceptMimeData(const QMimeData *data) const
+{
+	if (!data->hasUrls()) return false;
+
+	QList<QUrl> urls = data->urls();
+
+	bool ok = false;
+
+	foreach(const QUrl &url, urls)
+	{
+		QString filename = url.toLocalFile();
+
+		if (isImage(filename) || isProject(filename)) ok = true;
+	}
+
+	return ok;
+}
+
+void MapScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
+{
+	if (acceptMimeData(event->mimeData()))
+		event->acceptProposedAction();
+	else
+		event->ignore();
+}
+
+void MapScene::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+	if (!acceptMimeData(event->mimeData())) return;
+
+	// get the list of all files to upload
+	QList<QUrl> urlList = event->mimeData()->urls();
+
+	for (int i = 0; i < urlList.size() && i < 32; ++i)
+	{
+		QString filename = urlList.at(i).toLocalFile();
+
+		if (isProject(filename))
+		{
+			if (!load(filename))
+			{
+				qDebug() << "Couldn't load" << filename;
+			}
+
+			// don't add images or other projects
+			return;
+		}
+		else if (isImage(filename))
+		{
+			if (!importImage(filename, event->scenePos()))
+			{
+				qDebug() << "Couldn't insert" << filename;
+			}
+		}
+	}
+
+	event->acceptProposedAction();
+}
+
+bool MapScene::exportImage(const QString& filename)
+{
+	// get source and destination rectangles
+	QRectF srcRect = itemsBoundingRect();
+	QRectF dstRect = QRectF(QPointF(0, 0), srcRect.size());
+
+	// create a transparent image
+	QPixmap image(srcRect.width(), srcRect.height());
+	image.fill(Qt::transparent);
+
+	// paint the scene content on the image
+	QPainter painter;
+	painter.begin(&image);
+	painter.setRenderHint(QPainter::Antialiasing, true);
+	painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+	render(&painter, dstRect, srcRect);
+	painter.end();
+
+	// save the image
+	return image.save(filename);
+}
+
+void MapScene::updateNumbers()
+{
+	foreach(QGraphicsItem *item, items())
+	{
+		NumberMapItem *numberItem = qgraphicsitem_cast<NumberMapItem*>(item);
+
+		if (numberItem)
+		{
+			numberItem->updateNumber();
+		}
+	}
+}

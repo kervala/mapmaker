@@ -1,0 +1,6 @@
+?package(mapmaker): \
+	needs="x11" \
+	section="Applications/Network/File Transfer" \
+	icon="/usr/share/pixmaps/mapmaker.xpm" \
+	title="MapMaker" \
+	command="/usr/bin/mapmaker"

@@ -1,0 +1,27 @@
+Source: mapmaker
+Priority: optional
+Maintainer: Cédric OCHS <kervala@gmail.com>
+Build-Depends: debhelper (>= 9), cmake(>= 2.6), libqt4-dev
+Standards-Version: 3.9.3
+Section: web
+Bugs: http://dev.kervala.net/projects/mapmaker/issues
+Homepage: http://dev.kervala.net/projects/mapmaker/
+
+Package: mapmaker
+Section: web
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Map editor
+ This tool is a map editor, it can import different images and add marks.
+ .
+ This package contains the application.
+
+Package: mapmaker-dbg
+Priority: extra
+Section: debug
+Architecture: any
+Depends: ${misc:Depends}, mapmaker (= ${binary:Version})
+Description: Map editor
+ This tool is a map editor, it can import different images and add marks.
+ .
+ This package contains the debug symbols.
