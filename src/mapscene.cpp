@@ -525,3 +525,86 @@ void MapScene::updateImages()
 		}
 	}
 }
+
+void MapScene::recomputeNumbers(int number)
+{
+	QList<QGraphicsItem*> sitems = selectedItems();
+
+	// only if a number is selected
+	if (sitems.isEmpty()) return;
+
+	NumberMapItem *sitem = NULL;
+
+	foreach(QGraphicsItem *item, sitems)
+	{
+		sitem = qgraphicsitem_cast<NumberMapItem*>(item);
+
+		if (sitem) break;
+	}
+
+	QVector<QVector<NumberMapItem*> > numberItems;
+
+	numberItems.resize(m_nextNumber+1);
+
+	foreach(QGraphicsItem *aitem, items())
+	{
+		NumberMapItem *item = qgraphicsitem_cast<NumberMapItem*>(aitem);
+
+		if (item && item != sitem)
+		{
+			numberItems[item->getNumber()].push_back(item);
+		}
+	}
+	
+	int offset = 0;
+
+	for (int i = 1; i < m_nextNumber; ++i)
+	{
+		const QVector<NumberMapItem*> &iis = numberItems[i];
+
+		if (iis.isEmpty())
+		{
+			// decrement all next ones
+			if (i != number) --offset;
+		}
+		else
+		{
+			if (i == number) ++offset;
+
+			if (offset)
+			{
+				for (int j = 0, jlen = iis.size(); j < jlen; ++j)
+				{
+					iis[j]->setNumber(i + offset);
+				}
+			}
+		}
+	}
+
+	sitem->setNumber(number);
+
+	updateNumbers();
+}
+
+void MapScene::validateNumber(int number)
+{
+	QList<QGraphicsItem*> sitems = selectedItems();
+
+	// only if a number is selected
+	if (sitems.isEmpty()) return;
+
+	NumberMapItem *sitem = NULL;
+
+	foreach(QGraphicsItem *item, sitems)
+	{
+		sitem = qgraphicsitem_cast<NumberMapItem*>(item);
+
+		if (sitem)
+		{
+			sitem->setNumber(number);
+			break;
+		}
+	}
+
+	updateNumbers();
+}

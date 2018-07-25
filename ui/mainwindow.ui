@@ -33,7 +33,7 @@
       <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <layout class="QHBoxLayout" name="toolsLayout" stretch="0,0,1,0,0,0,0,0">
+         <layout class="QHBoxLayout" name="toolsLayout" stretch="0,0,1">
           <item>
            <widget class="QToolButton" name="selectButton">
             <property name="text">
@@ -90,123 +90,237 @@
             </property>
            </spacer>
           </item>
-          <item>
-           <widget class="QToolButton" name="imageButton">
-            <property name="text">
-             <string>Add or change image</string>
-            </property>
-            <property name="icon">
-             <iconset resource="../res/resources.qrc">
-              <normaloff>:/icons/image.png</normaloff>:/icons/image.png</iconset>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
-            <property name="autoRaise">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="fontButton">
-            <property name="text">
-             <string>Numbers font</string>
-            </property>
-            <property name="icon">
-             <iconset resource="../res/resources.qrc">
-              <normaloff>:/icons/font.png</normaloff>:/icons/font.png</iconset>
-            </property>
-            <property name="autoRaise">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="colorButton">
-            <property name="text">
-             <string>Numbers color</string>
-            </property>
-            <property name="icon">
-             <iconset resource="../res/resources.qrc">
-              <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
-            </property>
-            <property name="autoRaise">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="originForegroundColorButton">
-            <property name="text">
-             <string>Origin foreground color</string>
-            </property>
-            <property name="icon">
-             <iconset resource="../res/resources.qrc">
-              <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
-            </property>
-            <property name="autoRaise">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="finalForegroundColorButton">
-            <property name="text">
-             <string>Final foreground color</string>
-            </property>
-            <property name="icon">
-             <iconset resource="../res/resources.qrc">
-              <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
-            </property>
-            <property name="autoRaise">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
-         <widget class="QLabel" name="positionLabel">
-          <property name="text">
-           <string>Position</string>
-          </property>
+         <widget class="QFrame" name="positionFrame">
+          <layout class="QVBoxLayout" name="positionVerticalLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="positionLabel">
+             <property name="text">
+              <string>Position</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="positionLayout">
+             <item>
+              <widget class="QLineEdit" name="xEdit"/>
+             </item>
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>x</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="yEdit"/>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="positionLayout">
-          <item>
-           <widget class="QLineEdit" name="xEdit"/>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="yEdit"/>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QLabel" name="numberLabel">
-          <property name="text">
-           <string>Number</string>
-          </property>
+         <widget class="QFrame" name="numberFrame">
+          <layout class="QVBoxLayout" name="numberVerticalLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="numberLabel">
+             <property name="text">
+              <string>Number</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="numberEdit"/>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QToolButton" name="validateButton">
+               <property name="text">
+                <string>Update</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/validate.png</normaloff>:/icons/validate.png</iconset>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="recomputeButton">
+               <property name="text">
+                <string>Renumerote</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/recompute.png</normaloff>:/icons/recompute.png</iconset>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="fontButton">
+               <property name="text">
+                <string>Numbers font</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/font.png</normaloff>:/icons/font.png</iconset>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="colorButton">
+               <property name="text">
+                <string>Numbers color</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="numberHorizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="numberEdit"/>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="numberLayout"/>
-        </item>
-        <item>
-         <widget class="QLabel" name="imageLabel">
-          <property name="text">
-           <string>Image</string>
-          </property>
+         <widget class="QFrame" name="imageFrame">
+          <layout class="QVBoxLayout" name="imageVerticalLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="imageLabel">
+             <property name="text">
+              <string>Image</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="imageEdit"/>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="imageButtonsHorizontalLayout">
+             <item>
+              <widget class="QToolButton" name="imageButton">
+               <property name="text">
+                <string>Add or change image</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/image.png</normaloff>:/icons/image.png</iconset>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="originForegroundColorButton">
+               <property name="text">
+                <string>Origin foreground color</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="finalForegroundColorButton">
+               <property name="text">
+                <string>Final foreground color</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="imageHorizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="imageEdit"/>
         </item>
         <item>
          <spacer name="verticalSpacer">

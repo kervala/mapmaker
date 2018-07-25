@@ -69,6 +69,10 @@ MainWindow::MainWindow():QMainWindow()
 	connect(selectButton, SIGNAL(clicked()), this, SLOT(onSelectButton()));
 	connect(imageButton, SIGNAL(clicked()), this, SLOT(onImageButton()));
 	connect(numberButton, SIGNAL(clicked()), this, SLOT(onNumberButton()));
+
+	// numbers
+	connect(validateButton, SIGNAL(clicked()), this, SLOT(onValidateButton()));
+	connect(recomputeButton, SIGNAL(clicked()), this, SLOT(onRecomputeButton()));
 	connect(fontButton, SIGNAL(clicked()), this, SLOT(onFontButton()));
 	connect(colorButton, SIGNAL(clicked()), this, SLOT(onColorButton()));
 	connect(originForegroundColorButton, SIGNAL(clicked()), this, SLOT(onOriginForegroundColorButton()));
@@ -229,6 +233,21 @@ void MainWindow::onImageButton()
 			setError(tr("Unable to open image %1").arg(filename));
 		}
 	}
+}
+
+void MainWindow::onValidateButton()
+{
+	int number = numberEdit->text().toInt();
+
+	if (number >-1) m_scene->validateNumber(number);
+}
+
+void MainWindow::onRecomputeButton()
+{
+	int number = numberEdit->text().toInt();
+
+	// insert
+	if (number >-1 ) m_scene->recomputeNumbers(number);
 }
 
 void MainWindow::onFontButton()

@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/icons">
+    <file>recompute.png</file>
+    <file>validate.png</file>
     <file>color.png</file>
     <file>font.png</file>
     <file>icon.svg</file>
