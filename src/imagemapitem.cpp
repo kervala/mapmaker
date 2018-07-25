@@ -164,7 +164,7 @@ bool ImageMapItem::importImage(const QString &filename)
 
 	if (!file.open(QFile::ReadOnly)) return false;
 
-	m_filename = filename;
+	m_filename = QFileInfo(filename).fileName();
 	m_rawImage = file.readAll();
 
 	return updateImage();
@@ -243,6 +243,9 @@ void ImageMapItem::unserialize(QDataStream &stream)
 
 	stream >> m_filename;
 	stream >> m_rawImage;
+
+	// a full path
+	if (m_filename.indexOf('/') > -1) m_filename = QFileInfo(m_filename).fileName();
 
 	updateImage();
 }
