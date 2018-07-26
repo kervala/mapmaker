@@ -573,6 +573,8 @@ void MapScene::recomputeNumbers(int number)
 	
 	int offset = 0;
 
+	int lastNumber = 0;
+
 	for (int i = 1; i < m_nextNumber; ++i)
 	{
 		const QVector<NumberMapItem*> &iis = numberItems[i];
@@ -592,11 +594,19 @@ void MapScene::recomputeNumbers(int number)
 				{
 					iis[j]->setNumber(i + offset);
 				}
+
+				lastNumber = i + offset;
+			}
+			else
+			{
+				lastNumber = i;
 			}
 		}
 	}
 
 	sitem->setNumber(number);
+
+	m_nextNumber = lastNumber + 1;
 
 	updateNumbers();
 }
