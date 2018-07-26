@@ -38,7 +38,7 @@ quint32 s_version = 1;
 	#define new DEBUG_NEW
 #endif
 
-MapScene::MapScene(QObject *parent):QGraphicsScene(parent), m_mode(ModeSelect), m_nextNumber(1), m_nextId(0)
+MapScene::MapScene(QObject *parent):QGraphicsScene(parent), m_mode(ModeSelect), m_nextNumber(1), m_nextId(0), m_zoom(1.0)
 {
 	setSceneRect(0, 0, 5000, 5000);
 
@@ -306,23 +306,38 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	
 	if (mouseEvent->button() == Qt::LeftButton && m_mode != ModeSelect)
 	{
-		QGraphicsItem *wbItem = itemAt(mouseEvent->scenePos(), QTransform());
-
-		ImageMapItem *parentItem = qgraphicsitem_cast<ImageMapItem*>(wbItem);
-
-		// only allow to put numbers on images
-		if (parentItem)
+		if (m_mode == ModeZoom)
 		{
-			NumberMapItem *item = new NumberMapItem(parentItem);
-			item->setId(m_nextId);
-			item->setPos(parentItem->mapFromParent(mouseEvent->scenePos()));
-			item->setNumber(m_nextNumber);
-			item->setParentId(parentItem->getId());
+			bool unzoom = (mouseEvent->modifiers() & Qt::ControlModifier);
 
-			++m_nextNumber;
-			++m_nextId;
+			qreal zoom = unzoom ? 0.5 : 2;
+
+			m_zoom *= zoom;
+
+			emit zoomChanged(zoom);
 
 			mustProcess = false;
+		}
+		else
+		{
+			QGraphicsItem *wbItem = itemAt(mouseEvent->scenePos(), QTransform());
+
+			ImageMapItem *parentItem = qgraphicsitem_cast<ImageMapItem*>(wbItem);
+
+			// only allow to put numbers on images
+			if (parentItem)
+			{
+				NumberMapItem *item = new NumberMapItem(parentItem);
+				item->setId(m_nextId);
+				item->setPos(parentItem->mapFromParent(mouseEvent->scenePos()));
+				item->setNumber(m_nextNumber);
+				item->setParentId(parentItem->getId());
+
+				++m_nextNumber;
+				++m_nextId;
+
+				mustProcess = false;
+			}
 		}
 	}
 

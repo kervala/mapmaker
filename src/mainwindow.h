@@ -58,6 +58,7 @@ public slots:
 	// toolbar
 	void onSelectButton();
 	void onNumberButton();
+	void onZoomButton();
 	void onImageButton();
 	void onValidateButton();
 	void onRecomputeButton();
@@ -67,6 +68,7 @@ public slots:
 	void onFinalForegroundColorButton();
 
 	void onItemDetailsChanged(const MapScene::MapItemDetails &details);
+	void onZoomChanged(qreal);
 
 	void setError(const QString &error);
 	void setWarning(const QString &error);

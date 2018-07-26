@@ -28,7 +28,8 @@ public:
 	enum Mode
 	{
 		ModeSelect,
-		ModeNumber
+		ModeNumber,
+		ModeZoom
 	};
 
 	struct MapItemDetails
@@ -72,6 +73,7 @@ public:
 
 signals:
 	void itemDetailsChanged(const MapScene::MapItemDetails &details);
+	void zoomChanged(qreal zoom);
 
 public slots:
 	void onSelectionChanged();
@@ -80,6 +82,7 @@ protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	void keyPressEvent(QKeyEvent *keyEvent);
 
+	// drag and drop support
 	bool acceptMimeData(const QMimeData *data) const;
 	void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
 	void dropEvent(QGraphicsSceneDragDropEvent *event);
@@ -91,6 +94,7 @@ private:
 	QString m_filename;
 	int m_nextNumber;
 	int m_nextId;
+	qreal m_zoom;
 };
 
 #endif

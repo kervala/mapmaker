@@ -68,6 +68,7 @@ MainWindow::MainWindow():QMainWindow()
 	// tool bars
 	connect(selectButton, SIGNAL(clicked()), this, SLOT(onSelectButton()));
 	connect(numberButton, SIGNAL(clicked()), this, SLOT(onNumberButton()));
+	connect(zoomButton, SIGNAL(clicked()), this, SLOT(onZoomButton()));
 
 	// numbers
 	connect(validateButton, SIGNAL(clicked()), this, SLOT(onValidateButton()));
@@ -95,6 +96,7 @@ MainWindow::MainWindow():QMainWindow()
 
 	// scene
 	connect(m_scene, SIGNAL(itemDetailsChanged(MapScene::MapItemDetails)), this, SLOT(onItemDetailsChanged(MapScene::MapItemDetails)));
+	connect(m_scene, SIGNAL(zoomChanged(qreal)), this, SLOT(onZoomChanged(qreal)));
 
 	initSupportedFormats(true);
 	initSupportedFormats(false);
@@ -225,6 +227,11 @@ void MainWindow::onNumberButton()
 	m_scene->setMode(MapScene::ModeNumber);
 }
 
+void MainWindow::onZoomButton()
+{
+	m_scene->setMode(MapScene::ModeZoom);
+}
+
 void MainWindow::onImageButton()
 {
 	QString filename = QFileDialog::getOpenFileName(this, tr("Change image"), imageEdit->text(), m_supportedReadFormats);
@@ -346,6 +353,11 @@ void MainWindow::onItemDetailsChanged(const MapScene::MapItemDetails &details)
 			numberFrame->setVisible(true);
 		}
 	}
+}
+
+void MainWindow::onZoomChanged(qreal zoom)
+{
+	graphicsView->scale(zoom, zoom);
 }
 
 void MainWindow::setError(const QString &error)
