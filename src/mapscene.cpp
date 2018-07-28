@@ -40,7 +40,7 @@ quint32 s_version = 1;
 
 MapScene::MapScene(QObject *parent):QGraphicsScene(parent), m_mode(ModeSelect), m_nextNumber(1), m_nextId(0), m_zoom(1.0)
 {
-	setSceneRect(0, 0, 5000, 10000);
+	setSceneRect(0, 0, 5000, 20000);
 
 	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
 }
