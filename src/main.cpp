@@ -29,13 +29,12 @@
 
 #include <QtPlugin>
 
-#ifdef Q_OS_WIN32
+#if defined(Q_OS_WIN32)
 	Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
-	Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin)
-#endif
-	
-#ifdef Q_OS_MAC
+#elif defined(Q_OS_MAC)
 	Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
+#else
+	Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
 #endif
 
 	Q_IMPORT_PLUGIN(QSvgPlugin)
