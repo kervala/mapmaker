@@ -19,7 +19,6 @@
 
 #include "common.h"
 #include "commandline.h"
-#include "functions.h"
 #include "configfile.h"
 
 #include <fcntl.h>
