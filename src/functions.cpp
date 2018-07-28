@@ -36,6 +36,7 @@
 #else
 	#include <sys/vfs.h>
 	#include <sys/stat.h>
+	#include <utime.h>
 #endif
 
 #define USE_JPEGCHECKER
@@ -313,16 +314,16 @@ bool setFileModificationDate(const QString &filename, const QDateTime &modTime)
 #else
 	// first, read the current time of the file
 	struct stat buf;
-	int result = stat(fn.c_str(), &buf);
+	int result = stat(filename.toUtf8().constData(), &buf);
 	if (result != 0)
 		return false;
 
 	// prepare the new time to apply
 	utimbuf tb;
 	tb.actime = buf.st_atime;
-	tb.modtime = modTime;
+	tb.modtime = modTime.toSecsSinceEpoch();
 	// set eh new time
-	int res = utime(fn.c_str(), &tb);
+	int res = utime(filename.toUtf8().constData(), &tb);
 	if (res == -1)
 	{
 		qDebug() << QString("Can't set modification date on file '%1'").arg(filename);
