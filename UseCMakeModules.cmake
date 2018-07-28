@@ -39,5 +39,7 @@ IF(WITH_REMOTE_CMAKE_MODULES OR NOT COMMON_MODULE_FOUND)
     SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 
     INCLUDE(common)
+  ELSE()
+    MESSAGE(FATAL_ERROR "Unable to find Mercurial to clone CMake modules repository!")
   ENDIF()
 ENDIF()
