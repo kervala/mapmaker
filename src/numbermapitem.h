@@ -46,6 +46,9 @@ public:
 	void serialize(QDataStream &stream) const;
 	void unserialize(QDataStream &stream);
 
+	static void initFont();
+	static void releaseFont();
+
 	static void setFont(const QFont &font);
 	static QFont getFont();
 
@@ -64,8 +67,8 @@ private:
 	QPainterPath m_path;
 	QRectF m_rect;
 
-	static QFont s_font;
-	static QColor s_color;
+	static QFont *s_font;
+	static QColor *s_color;
 };
 
 QDataStream& operator << (QDataStream &stream, const NumberMapItem &item);

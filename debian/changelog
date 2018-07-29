@@ -1,3 +1,39 @@
+mapmaker (1.0.21~bionic1) bionic; urgency=medium
+
+  * New upstream release (revision 21)
+
+ -- Cédric OCHS <kervala@gmail.com>  Sat, 28 Jul 2018 16:24:14 +0200
+
+mapmaker (1.0.20~bionic1) bionic; urgency=medium
+
+  * New upstream release (revision 20)
+
+ -- Cédric OCHS <kervala@gmail.com>  Sat, 28 Jul 2018 15:52:23 +0200
+
+mapmaker (1.0.20~xenial1) xenial; urgency=medium
+
+  * New upstream release (revision 20)
+
+ -- Cédric OCHS <kervala@gmail.com>  Sat, 28 Jul 2018 15:46:49 +0200
+
+mapmaker (1.0.19~xenial1) xenial; urgency=medium
+
+  * New upstream release (revision 19)
+
+ -- Cédric OCHS <kervala@gmail.com>  Sat, 28 Jul 2018 15:32:47 +0200
+
+mapmaker (1.0.18~xenial1) xenial; urgency=medium
+
+  * New upstream release (revision 18)
+
+ -- Cédric OCHS <kervala@gmail.com>  Sat, 28 Jul 2018 15:14:45 +0200
+
+mapmaker (1.0.17~xenial1) xenial; urgency=medium
+
+  * New upstream release (revision 17)
+
+ -- Cédric OCHS <kervala@gmail.com>  Sat, 28 Jul 2018 14:53:21 +0200
+
 mapmaker (1.0.0) xenial; urgency=low
 
   * Initial release

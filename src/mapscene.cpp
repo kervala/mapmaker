@@ -40,6 +40,8 @@ quint32 s_version = 1;
 
 MapScene::MapScene(QObject *parent):QGraphicsScene(parent), m_mode(ModeSelect), m_nextNumber(1), m_nextId(0), m_zoom(1.0)
 {
+	NumberMapItem::initFont();
+
 	setSceneRect(0, 0, 5000, 10000);
 
 	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
@@ -47,6 +49,7 @@ MapScene::MapScene(QObject *parent):QGraphicsScene(parent), m_mode(ModeSelect), 
 
 MapScene::~MapScene()
 {
+	NumberMapItem::releaseFont();
 }
 
 void MapScene::reset()

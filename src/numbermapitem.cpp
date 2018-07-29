@@ -25,8 +25,8 @@
 	#define new DEBUG_NEW
 #endif
 
-QFont NumberMapItem::s_font("Arial", 20);
-QColor NumberMapItem::s_color(Qt::white);
+QFont* NumberMapItem::s_font = NULL;
+QColor* NumberMapItem::s_color = NULL;
 
 NumberMapItem::NumberMapItem(QGraphicsItem *parent):MapItem(parent), m_number(0), m_parentId(-1)
 {
@@ -53,8 +53,8 @@ QPainterPath NumberMapItem::shape() const
 void NumberMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	painter->save();
-	painter->setPen(QPen(s_color, 0));
-	painter->setFont(s_font);
+	painter->setPen(QPen(*s_color, 0));
+	painter->setFont(*s_font);
 	painter->drawText(option->rect, Qt::AlignCenter, QString::number(m_number));
 
 	MapItem::paint(painter, option, widget);
@@ -90,6 +90,27 @@ QVariant NumberMapItem::itemChange(GraphicsItemChange change, const QVariant &va
 	return MapItem::itemChange(change, value);
 }
 
+void NumberMapItem::initFont()
+{
+	if (!s_font) s_font = new QFont("Arial", 20);
+	if (!s_color) s_color = new QColor(Qt::white);
+}
+
+void NumberMapItem::releaseFont()
+{
+	if (s_font)
+	{
+		delete s_font;
+		s_font = NULL;
+	}
+
+	if (s_color)
+	{
+		delete s_color;
+		s_color = NULL;
+	}
+}
+
 int NumberMapItem::getNumber() const
 {
 	return m_number;
@@ -107,7 +128,7 @@ bool NumberMapItem::updateNumber()
 	// notify that item is about to change
 	prepareGeometryChange();
 
-	QFontMetrics fm(s_font);
+	QFontMetrics fm(*s_font);
 	QString str = QString::number(m_number);
 
 	QSize size = fm.size(Qt::TextSingleLine, str);
@@ -139,21 +160,21 @@ void NumberMapItem::setParentId(int id)
 
 void NumberMapItem::setFont(const QFont &font)
 {
-	s_font = font;
+	*s_font = font;
 }
 QFont NumberMapItem::getFont()
 {
-	return s_font;
+	return *s_font;
 }
 
 void NumberMapItem::setColor(const QColor &color)
 {
-	s_color = color;
+	*s_color = color;
 }
 
 QColor NumberMapItem::getColor()
 {
-	return s_color;
+	return *s_color;
 }
 
 void NumberMapItem::serialize(QDataStream &stream) const
