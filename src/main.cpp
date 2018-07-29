@@ -31,6 +31,7 @@
 
 #if defined(Q_OS_WIN32)
 	Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+	Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin)
 #elif defined(Q_OS_MAC)
 	Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
 #else
