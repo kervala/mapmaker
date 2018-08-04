@@ -97,6 +97,7 @@ QVariant ImageMapItem::itemChange(GraphicsItemChange change, const QVariant &val
 		QRectF r = scene()->sceneRect();
 
 		bool changed = false;
+		bool mustUpdateSceneSize = false;
 
 		if (p1.x() < 0)
 		{
@@ -109,6 +110,7 @@ QVariant ImageMapItem::itemChange(GraphicsItemChange change, const QVariant &val
 			p1.setX(r.right() - size.width());
 
 			changed = true;
+			mustUpdateSceneSize = true;
 		}
 
 		if (p1.y() < 0)
@@ -122,7 +124,10 @@ QVariant ImageMapItem::itemChange(GraphicsItemChange change, const QVariant &val
 			p1.setY(r.bottom() - size.height());
 
 			changed = true;
+			mustUpdateSceneSize = true;
 		}
+
+		if (mustUpdateSceneSize) emit qobject_cast<MapScene*>(scene())->updateSceneSize();
 
 		if (changed) return p1;
 	}

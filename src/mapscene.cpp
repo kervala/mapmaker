@@ -42,9 +42,10 @@ MapScene::MapScene(QObject *parent):QGraphicsScene(parent), m_mode(ModeSelect), 
 {
 	NumberMapItem::initFont();
 
-	setSceneRect(0, 0, 5000, 10000);
+	setSceneRect(0, 0, 1000, 1000);
 
 	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
+	connect(this, SIGNAL(sceneSizeUpdated()), SLOT(updateSceneSize()));
 }
 
 MapScene::~MapScene()
@@ -183,6 +184,8 @@ bool MapScene::load(const QString &filename)
 		}
 	}
 
+	updateSceneSize();
+
 	return true;
 }
 
@@ -273,6 +276,8 @@ bool MapScene::importImage(const QString &filename, const QPointF &pos)
 	addItem(item);
 
 	++m_nextId;
+
+	updateSceneSize();
 
 	return true;
 }

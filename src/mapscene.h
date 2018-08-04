@@ -66,6 +66,10 @@ public:
 	void recomputeNumbers();
 
 	void validateNumber(int number);
+	void incrementNumber(int number);
+	void decrementNumber(int number);
+
+	void updateSceneSize();
 
 	static QList<QByteArray> getImagesFormats(bool write);
 
@@ -75,6 +79,7 @@ public:
 signals:
 	void itemDetailsChanged(const MapScene::MapItemDetails &details);
 	void zoomChanged(qreal zoom);
+	void sceneSizeUpdated();
 
 public slots:
 	void onSelectionChanged();
