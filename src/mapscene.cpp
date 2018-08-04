@@ -514,24 +514,62 @@ void MapScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 bool MapScene::exportImage(const QString& filename)
 {
+	QString ext = QFileInfo(filename).suffix();
+
 	// get source and destination rectangles
 	QRectF srcRect = itemsBoundingRect();
 	QRectF dstRect = QRectF(QPointF(0, 0), srcRect.size());
 
-	// create a transparent image
-	QPixmap image(srcRect.width(), srcRect.height());
-	image.fill(Qt::transparent);
+	QPaintDevice *image = NULL;
+	QSvgGenerator *svgGenerator = NULL;
+	QPixmap *pixmap = NULL;
+	QPrinter *printer = NULL;
+
+	if (ext == "svg")
+	{
+		// create a SVG file
+		svgGenerator = new QSvgGenerator();
+		svgGenerator->setFileName(filename);
+		svgGenerator->setTitle(tr("Neolinks SVG Generator"));
+		svgGenerator->setDescription(tr("A whiteboard exported as SVG."));
+		svgGenerator->setSize(srcRect.size().toSize());
+		svgGenerator->setViewBox(dstRect);
+
+		image = svgGenerator;
+	}
+	else if (ext == "pdf")
+	{
+		// create a PDF document
+		printer = new QPrinter(QPrinter::HighResolution);
+		printer->setOutputFormat(QPrinter::PdfFormat);
+		printer->setPaperSize(QPrinter::A4);
+		printer->setOutputFileName(filename);
+		printer->setResolution(300);
+//		printer->setPageSize(QPageSize())
+
+		image = printer;
+	}
+	else
+	{
+		// create a transparent image
+		pixmap = new QPixmap(srcRect.width(), srcRect.height());
+		pixmap->fill(Qt::transparent);
+
+		image = pixmap;
+	}
 
 	// paint the scene content on the image
 	QPainter painter;
-	painter.begin(&image);
-	painter.setRenderHint(QPainter::Antialiasing, true);
-	painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+//	painter.setWindow(dstRect.toRect());
+//	painter.setViewport(dstRect.toRect());
+	painter.begin(image);
 	render(&painter, dstRect, srcRect);
 	painter.end();
 
+	delete image;
+
 	// save the image
-	return image.save(filename);
+	return pixmap ? pixmap->save(filename):true;
 }
 
 void MapScene::updateNumbers()

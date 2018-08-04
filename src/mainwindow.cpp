@@ -191,7 +191,7 @@ void MainWindow::onSaveAs()
 
 void MainWindow::onExport()
 {
-	QString filename = QFileDialog::getSaveFileName(this, tr("Export image"), "", m_supportedWriteFormats);
+	QString filename = QFileDialog::getSaveFileName(this, tr("Export image"), "", m_supportedWriteFormats + ";;" + tr("SVG file (*.svg)") + ";;" + tr("PDF file (*.pdf)"));
 
 	if (filename.isEmpty())
 		return;
