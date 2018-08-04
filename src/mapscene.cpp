@@ -584,6 +584,15 @@ void MapScene::updateNumbers()
 		if (numberItem)
 		{
 			numberItem->updateNumber();
+
+			if (item->isSelected())
+			{
+				MapItemDetails details;
+				details.position = numberItem->pos().toPoint();
+				details.number = numberItem->getNumber();
+
+				emit itemDetailsChanged(details);
+			}
 		}
 	}
 }
