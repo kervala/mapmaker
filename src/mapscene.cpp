@@ -22,6 +22,9 @@
 #include "numbermapitem.h"
 #include "imagemapitem.h"
 
+#include <qsvggenerator.h>
+#include <QtPrintSupport/qprinter.h>
+
 struct SMagicHeader
 {
 	union
