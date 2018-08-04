@@ -81,6 +81,8 @@ public slots:
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
+	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
+
 	void keyPressEvent(QKeyEvent *keyEvent);
 
 	// drag and drop support

@@ -348,6 +348,17 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	if (mustProcess) QGraphicsScene::mousePressEvent(mouseEvent);
 }
 
+void MapScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+	if (m_mode == ModeZoom)
+	{
+		mousePressEvent(mouseEvent);
+		return;
+	}
+
+	QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
+}
+
 void MapScene::keyPressEvent(QKeyEvent *keyEvent)
 {
 	if (keyEvent->key() == Qt::Key_Delete)
