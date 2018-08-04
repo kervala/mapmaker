@@ -76,6 +76,9 @@ MapScene::Mode MapScene::getMode() const
 void MapScene::setMode(Mode mode)
 {
 	m_mode = mode;
+
+	// TODO: put a zoom cursor if zoom mode
+	// setCusor(Qt::)
 }
 
 QString MapScene::getFilename() const

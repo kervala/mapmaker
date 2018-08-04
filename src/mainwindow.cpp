@@ -71,7 +71,7 @@ MainWindow::MainWindow():QMainWindow()
 	connect(zoomButton, SIGNAL(clicked()), this, SLOT(onZoomButton()));
 
 	// numbers
-	connect(validateButton, SIGNAL(clicked()), this, SLOT(onValidateButton()));
+	connect(validateNumberButton, SIGNAL(clicked()), this, SLOT(onValidateButton()));
 	connect(recomputeButton, SIGNAL(clicked()), this, SLOT(onRecomputeButton()));
 	connect(incrementButton, SIGNAL(clicked()), this, SLOT(onIncrementButton()));
 	connect(fontButton, SIGNAL(clicked()), this, SLOT(onFontButton()));
@@ -295,6 +295,8 @@ void MainWindow::onColorButton()
 		NumberMapItem::setColor(newColor);
 
 		m_scene->updateNumbers();
+
+		// TODO: change icon
 	}
 }
 

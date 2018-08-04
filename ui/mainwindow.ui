@@ -136,6 +136,20 @@
              <item>
               <widget class="QLineEdit" name="yEdit"/>
              </item>
+             <item>
+              <widget class="QToolButton" name="validatePositionButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/validate.png</normaloff>:/icons/validate.png</iconset>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
           </layout>
@@ -169,7 +183,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
-              <widget class="QToolButton" name="validateButton">
+              <widget class="QToolButton" name="validateNumberButton">
                <property name="text">
                 <string>Update</string>
                </property>
