@@ -63,7 +63,8 @@ public:
 
 	void updateNumbers();
 	void updateImages();
-	void recomputeNumbers(int number);
+	void recomputeNumbers();
+
 	void validateNumber(int number);
 
 	static QList<QByteArray> getImagesFormats(bool write);

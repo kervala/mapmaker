@@ -544,22 +544,8 @@ void MapScene::updateImages()
 	}
 }
 
-void MapScene::recomputeNumbers(int number)
+void MapScene::recomputeNumbers()
 {
-	QList<QGraphicsItem*> sitems = selectedItems();
-
-	// only if a number is selected
-	if (sitems.isEmpty()) return;
-
-	NumberMapItem *sitem = NULL;
-
-	foreach(QGraphicsItem *item, sitems)
-	{
-		sitem = qgraphicsitem_cast<NumberMapItem*>(item);
-
-		if (sitem) break;
-	}
-
 	QVector<QVector<NumberMapItem*> > numberItems;
 
 	numberItems.resize(m_nextNumber+1);
@@ -568,7 +554,7 @@ void MapScene::recomputeNumbers(int number)
 	{
 		NumberMapItem *item = qgraphicsitem_cast<NumberMapItem*>(aitem);
 
-		if (item && item != sitem)
+		if (item)
 		{
 			numberItems[item->getNumber()].push_back(item);
 		}
@@ -584,13 +570,10 @@ void MapScene::recomputeNumbers(int number)
 
 		if (iis.isEmpty())
 		{
-			// decrement all next ones
-			if (i != number) --offset;
+			--offset;
 		}
 		else
 		{
-			if (i == number) ++offset;
-
 			if (offset)
 			{
 				for (int j = 0, jlen = iis.size(); j < jlen; ++j)
@@ -606,8 +589,6 @@ void MapScene::recomputeNumbers(int number)
 			}
 		}
 	}
-
-	sitem->setNumber(number);
 
 	m_nextNumber = lastNumber + 1;
 
