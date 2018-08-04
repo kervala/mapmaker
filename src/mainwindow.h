@@ -62,6 +62,7 @@ public slots:
 	void onImageButton();
 	void onValidateButton();
 	void onRecomputeButton();
+	void onIncrementButton();
 	void onFontButton();
 	void onColorButton();
 	void onOriginForegroundColorButton();

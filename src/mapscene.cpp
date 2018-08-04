@@ -636,3 +636,78 @@ void MapScene::validateNumber(int number)
 
 	updateNumbers();
 }
+
+void MapScene::incrementNumber(int number)
+{
+	QList<QGraphicsItem*> sitems = selectedItems();
+
+	// only if a number is selected
+	if (sitems.isEmpty()) return;
+
+	NumberMapItem *sitem = NULL;
+
+	foreach(QGraphicsItem *item, sitems)
+	{
+		sitem = qgraphicsitem_cast<NumberMapItem*>(item);
+
+		if (sitem) break;
+	}
+
+	int oldNumber = sitem->getNumber();
+	int newNumber = number;
+
+	// only accept greater numbers
+	if (newNumber <= oldNumber) return;
+
+	int offset = newNumber - oldNumber;
+
+	QVector<QVector<NumberMapItem*> > numberItems;
+
+	numberItems.resize(m_nextNumber + offset + 1);
+
+	foreach(QGraphicsItem *aitem, items())
+	{
+		NumberMapItem *item = qgraphicsitem_cast<NumberMapItem*>(aitem);
+
+		if (item)
+		{
+			numberItems[item->getNumber()].push_back(item);
+		}
+	}
+
+	int lastNumber = 0;
+
+	for (int i = oldNumber; i < m_nextNumber; ++i)
+	{
+		const QVector<NumberMapItem*> &iis = numberItems[i];
+
+		if (!iis.isEmpty())
+		{
+			for (int j = 0, jlen = iis.size(); j < jlen; ++j)
+			{
+				iis[j]->setNumber(i + offset);
+			}
+
+			lastNumber = i + offset;
+		}
+	}
+
+	m_nextNumber = lastNumber + 1;
+
+	updateNumbers();
+}
+
+void MapScene::decrementNumber(int number)
+{
+}
+
+void MapScene::updateSceneSize()
+{
+	// increase size of the scene
+	QSizeF oldSize = sceneRect().size();
+	QSizeF newSize = itemsBoundingRect().size() + QSizeF(1000, 1000);
+
+	setSceneRect(QRectF(QPointF(0, 0), newSize));
+
+	qDebug() << "old" << oldSize << "new" << newSize;
+}

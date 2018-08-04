@@ -73,6 +73,7 @@ MainWindow::MainWindow():QMainWindow()
 	// numbers
 	connect(validateButton, SIGNAL(clicked()), this, SLOT(onValidateButton()));
 	connect(recomputeButton, SIGNAL(clicked()), this, SLOT(onRecomputeButton()));
+	connect(incrementButton, SIGNAL(clicked()), this, SLOT(onIncrementButton()));
 	connect(fontButton, SIGNAL(clicked()), this, SLOT(onFontButton()));
 	connect(colorButton, SIGNAL(clicked()), this, SLOT(onColorButton()));
 
@@ -257,10 +258,14 @@ void MainWindow::onValidateButton()
 
 void MainWindow::onRecomputeButton()
 {
+	m_scene->recomputeNumbers();
+}
+
+void MainWindow::onIncrementButton()
+{
 	int number = numberEdit->text().toInt();
 
-	// insert
-	if (number >-1 ) m_scene->recomputeNumbers(number);
+	if (number >-1) m_scene->incrementNumber(number);
 }
 
 void MainWindow::onFontButton()
