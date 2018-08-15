@@ -579,13 +579,13 @@ void MapScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 		if (isProject(filename))
 		{
-			if (!load(filename))
+			if (load(filename))
 			{
-				qDebug() << "Couldn't load" << filename;
+				// don't add images or other projects
+				return;
 			}
 
-			// don't add images or other projects
-			return;
+			qDebug() << "Couldn't load" << filename;
 		}
 		else if (isImage(filename))
 		{
