@@ -265,7 +265,10 @@
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="colorButton">
+              <widget class="QToolButton" name="numberColorButton">
+               <property name="toolTip">
+                <string>Change font color for numbers</string>
+               </property>
                <property name="text">
                 <string>Numbers color</string>
                </property>
@@ -548,6 +551,9 @@
              </item>
              <item>
               <widget class="QToolButton" name="originForegroundColorButton">
+               <property name="toolTip">
+                <string>Origin foreground color</string>
+               </property>
                <property name="text">
                 <string>Origin foreground color</string>
                </property>
@@ -562,6 +568,9 @@
              </item>
              <item>
               <widget class="QToolButton" name="finalForegroundColorButton">
+               <property name="toolTip">
+                <string>Final foreground color</string>
+               </property>
                <property name="text">
                 <string>Final foreground color</string>
                </property>

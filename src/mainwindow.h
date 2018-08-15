@@ -24,6 +24,7 @@
 #include "mapscene.h"
 
 class LogsDialog;
+class ColorAction;
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
@@ -65,7 +66,7 @@ public slots:
 	void onRecomputeButton();
 	void onIncrementButton();
 	void onFontButton();
-	void onColorButton();
+	void onNumberColorButton();
 	void onOriginForegroundColorButton();
 	void onFinalForegroundColorButton();
 	void onSymbolImageButton();
@@ -74,6 +75,7 @@ public slots:
 	void onSymbolSizeChanged(int size);
 	void onItemDetailsChanged(const MapItem::Details &details);
 	void onZoomChanged(qreal);
+	void onLoadProject();
 
 	void setError(const QString &error);
 	void setWarning(const QString &error);
@@ -85,6 +87,11 @@ protected:
 
 	LogsDialog *m_logsDialog;
 	MapScene *m_scene;
+
+	ColorAction* m_numberColorAction;
+	ColorAction* m_imageForegroundOriginColorAction;
+	ColorAction* m_imageForegroundFinalColorAction;
+	ColorAction* m_symbolColorAction;
 
 	QString m_supportedReadFormats;
 	QString m_supportedWriteFormats;

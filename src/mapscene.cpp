@@ -232,6 +232,8 @@ bool MapScene::load(const QString &filename)
 
 	updateSceneSize();
 
+	emit projectLoaded();
+
 	return true;
 }
 

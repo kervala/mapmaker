@@ -82,6 +82,7 @@ signals:
 	void itemDetailsChanged(const MapItem::Details &details);
 	void zoomChanged(qreal zoom);
 	void sceneSizeUpdated();
+	void projectLoaded();
 
 public slots:
 	void onSelectionChanged();

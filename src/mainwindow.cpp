@@ -25,6 +25,7 @@
 #include "mapscene.h"
 #include "numbermapitem.h"
 #include "imagemapitem.h"
+#include "coloraction.h"
 
 #ifdef HAVE_CONFIG_H
 	#include "config.h"
@@ -34,7 +35,7 @@
 	#define new DEBUG_NEW
 #endif
 
-MainWindow::MainWindow():QMainWindow()
+MainWindow::MainWindow():QMainWindow(), m_logsDialog(NULL), m_scene(NULL), m_numberColorAction(NULL), m_imageForegroundOriginColorAction(NULL), m_imageForegroundFinalColorAction(NULL)
 {
 	setupUi(this);
 
@@ -76,12 +77,53 @@ MainWindow::MainWindow():QMainWindow()
 	connect(recomputeButton, SIGNAL(clicked()), this, SLOT(onRecomputeButton()));
 	connect(incrementButton, SIGNAL(clicked()), this, SLOT(onIncrementButton()));
 	connect(fontButton, SIGNAL(clicked()), this, SLOT(onFontButton()));
-	connect(colorButton, SIGNAL(clicked()), this, SLOT(onColorButton()));
+
+	// symbols
+	connect(symbolCrossButton, SIGNAL(clicked()), this, SLOT(onSymbolImageButton()));
+	connect(symbolCircleButton, SIGNAL(clicked()), this, SLOT(onSymbolImageButton()));
+	connect(symbolCircleFilledButton, SIGNAL(clicked()), this, SLOT(onSymbolImageButton()));
+	connect(symbolSquareButton, SIGNAL(clicked()), this, SLOT(onSymbolImageButton()));
+	connect(symbolSquareFilledButton, SIGNAL(clicked()), this, SLOT(onSymbolImageButton()));
+	connect(symbolTriangleButton, SIGNAL(clicked()), this, SLOT(onSymbolImageButton()));
+	connect(symbolTriangleFilledButton, SIGNAL(clicked()), this, SLOT(onSymbolImageButton()));
+
+	connect(symbolSizeSpinBox, SIGNAL(valueChanged(int)), this, SLOT(onSymbolSizeChanged(int)));
+
+	// color actions
+	m_numberColorAction = new ColorAction(this);
+	m_numberColorAction->setPixmap(QPixmap(":/icons/color.png"));
+	m_numberColorAction->setCurrentColor(Qt::white);
+
+	numberColorButton->setDefaultAction(m_numberColorAction);
+
+	connect(m_numberColorAction, SIGNAL(triggered()), this, SLOT(onNumberColorButton()));
+
+	m_imageForegroundOriginColorAction = new ColorAction(this);
+	m_imageForegroundOriginColorAction->setPixmap(QPixmap(":/icons/color.png"));
+	m_imageForegroundOriginColorAction->setCurrentColor(Qt::black);
+
+	originForegroundColorButton->setDefaultAction(m_imageForegroundOriginColorAction);
+
+	connect(m_imageForegroundOriginColorAction, SIGNAL(triggered()), this, SLOT(onOriginForegroundColorButton()));
+
+	m_imageForegroundFinalColorAction = new ColorAction(this);
+	m_imageForegroundFinalColorAction->setPixmap(QPixmap(":/icons/color.png"));
+	m_imageForegroundFinalColorAction->setCurrentColor(Qt::white);
+
+	finalForegroundColorButton->setDefaultAction(m_imageForegroundFinalColorAction);
+
+	connect(m_imageForegroundFinalColorAction, SIGNAL(triggered()), this, SLOT(onFinalForegroundColorButton()));
+
+	m_symbolColorAction = new ColorAction(this);
+	m_symbolColorAction->setPixmap(QPixmap(":/icons/color.png"));
+	m_symbolColorAction->setCurrentColor(Qt::white);
+
+	symbolColorButton->setDefaultAction(m_symbolColorAction);
+
+	connect(m_symbolColorAction, SIGNAL(triggered()), this, SLOT(onSymbolColorButton()));
 
 	// images
 	connect(imageButton, SIGNAL(clicked()), this, SLOT(onImageButton()));
-	connect(originForegroundColorButton, SIGNAL(clicked()), this, SLOT(onOriginForegroundColorButton()));
-	connect(finalForegroundColorButton, SIGNAL(clicked()), this, SLOT(onFinalForegroundColorButton()));
 
 	setInfo(tr("Starting %1").arg(PRODUCT));
 
@@ -97,8 +139,9 @@ MainWindow::MainWindow():QMainWindow()
 	graphicsView->horizontalScrollBar()->setSliderPosition(1);
 
 	// scene
-	connect(m_scene, SIGNAL(itemDetailsChanged(MapScene::MapItemDetails)), this, SLOT(onItemDetailsChanged(MapScene::MapItemDetails)));
+	connect(m_scene, SIGNAL(itemDetailsChanged(MapItem::Details)), this, SLOT(onItemDetailsChanged(MapItem::Details)));
 	connect(m_scene, SIGNAL(zoomChanged(qreal)), this, SLOT(onZoomChanged(qreal)));
+	connect(m_scene, SIGNAL(projectLoaded()), this, SLOT(onLoadProject()));
 
 	initSupportedFormats(true);
 	initSupportedFormats(false);
@@ -313,7 +356,7 @@ void MainWindow::onFontButton()
 	}
 }
 
-void MainWindow::onColorButton()
+void MainWindow::onNumberColorButton()
 {
 	QColor oldColor = NumberMapItem::getColor();
 
@@ -321,11 +364,11 @@ void MainWindow::onColorButton()
 
 	if (oldColor != newColor)
 	{
+		m_numberColorAction->setCurrentColor(newColor);
+
 		NumberMapItem::setColor(newColor);
 
 		m_scene->updateNumbers();
-
-		// TODO: change icon
 	}
 }
 
@@ -337,6 +380,8 @@ void MainWindow::onOriginForegroundColorButton()
 
 	if (oldColor != newColor)
 	{
+		m_imageForegroundOriginColorAction->setCurrentColor(newColor);
+
 		ImageMapItem::setOriginForegroundColor(newColor);
 
 		m_scene->updateImages();
@@ -351,6 +396,8 @@ void MainWindow::onFinalForegroundColorButton()
 
 	if (oldColor != newColor)
 	{
+		m_imageForegroundFinalColorAction->setCurrentColor(newColor);
+
 		ImageMapItem::setFinalForegroundColor(newColor);
 
 		m_scene->updateImages();
@@ -417,6 +464,7 @@ void MainWindow::onItemDetailsChanged(const MapItem::Details &details)
 
 			imageFrame->setVisible(true);
 			numberFrame->setVisible(false);
+			symbolFrame->setVisible(false);
 		}
 		else if (details.type == MapItem::Symbol)
 		{
@@ -469,6 +517,17 @@ void MainWindow::onItemDetailsChanged(const MapItem::Details &details)
 void MainWindow::onZoomChanged(qreal zoom)
 {
 	graphicsView->scale(zoom, zoom);
+}
+
+void MainWindow::onLoadProject()
+{
+	// update color icons
+	m_numberColorAction->setCurrentColor(NumberMapItem::getColor());
+	m_imageForegroundFinalColorAction->setCurrentColor(ImageMapItem::getFinalForegroundColor());
+	m_imageForegroundOriginColorAction->setCurrentColor(ImageMapItem::getOriginForegroundColor());
+	m_symbolColorAction->setCurrentColor(SymbolMapItem::getColor());
+
+	symbolSizeSpinBox->setValue(SymbolMapItem::getSize());
 }
 
 void MainWindow::setError(const QString &error)
