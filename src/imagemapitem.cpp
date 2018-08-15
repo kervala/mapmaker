@@ -38,16 +38,6 @@ ImageMapItem::~ImageMapItem()
 {
 }
 
-QRectF ImageMapItem::boundingRect() const
-{
-	return m_rect;
-}
-
-QPainterPath ImageMapItem::shape() const
-{
-	return m_path;
-}
-
 void ImageMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	painter->save();
@@ -80,6 +70,14 @@ void ImageMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 	MapItem::paint(painter, option, widget);
 
 	painter->restore();
+}
+
+MapItem::Details ImageMapItem::getDetails() const
+{
+	MapItem::Details details = MapItem::getDetails();
+	details.type = MapItem::Image;
+	details.image = m_filename;
+	return details;
 }
 
 QVariant ImageMapItem::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -136,12 +134,7 @@ QVariant ImageMapItem::itemChange(GraphicsItemChange change, const QVariant &val
 
 	if (change == ItemPositionHasChanged && scene())
 	{
-		MapScene::MapItemDetails details;
-		details.position = value.toPoint();
-		details.image = m_filename;
-		details.number = -1;
-
-		emit qobject_cast<MapScene*>(scene())->itemDetailsChanged(details);
+		emit qobject_cast<MapScene*>(scene())->itemDetailsChanged(getDetails());
 	}
 
 	// just return the QVariant
@@ -156,11 +149,6 @@ void ImageMapItem::setFilename(const QString &filename)
 QString ImageMapItem::getFilename() const
 {
 	return m_filename;
-}
-
-QSizeF ImageMapItem::getSize() const
-{
-	return m_rect.size();
 }
 
 bool ImageMapItem::importImage(const QString &filename)

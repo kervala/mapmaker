@@ -131,7 +131,7 @@ bool MapScene::load(const QString &filename)
 
 	QColor color;
 
-	// numbers colors
+	// numbers color
 	stream >> color;
 	NumberMapItem::setColor(color);
 
@@ -414,11 +414,15 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			// only allow to put numbers on images
 			if (parentItem)
 			{
-				NumberMapItem *item = new NumberMapItem(parentItem);
-				item->setId(m_nextId);
-				item->setPos(parentItem->mapFromParent(mouseEvent->scenePos()));
-				item->setNumber(m_nextNumber);
-				item->setParentId(parentItem->getId());
+				MapItem *item = NULL;
+
+				if (m_mode == ModeNumber)
+				{
+					NumberMapItem *numberItem = new NumberMapItem(parentItem);
+					numberItem->setParentId(parentItem->getId());
+					numberItem->setNumber(m_nextNumber);
+
+					item = numberItem;
 
 					++m_nextNumber;
 				}
@@ -519,30 +523,16 @@ void MapScene::onSelectionChanged()
 	{
 		foreach(QGraphicsItem *item, items)
 		{
-			MapItemDetails details;
-			details.position = item->pos().toPoint();
+			// always a MapItem
+			MapItem *mapItem = (MapItem*)item;
 
-			ImageMapItem *imageItem = qgraphicsitem_cast<ImageMapItem*>(item);
-			NumberMapItem *numberItem = qgraphicsitem_cast<NumberMapItem*>(item);
-
-			if (imageItem)
-			{
-				details.image = imageItem->getFilename();
-				details.number = -1;
-			}
-			else if (numberItem)
-			{
-				details.number = numberItem->getNumber();
-			}
-
-			emit itemDetailsChanged(details);
+			emit itemDetailsChanged(mapItem->getDetails());
 		}
 	}
 	else
 	{
-		MapItemDetails details;
-		details.number = -1;
-		details.position = QPoint(-1, -1);
+		MapItem::Details details;
+		details.type = MapItem::None;
 
 		emit itemDetailsChanged(details);
 	}
@@ -679,9 +669,11 @@ void MapScene::updateNumbers()
 
 			if (item->isSelected())
 			{
-				MapItemDetails details;
-				details.position = numberItem->pos().toPoint();
-				details.number = numberItem->getNumber();
+				emit itemDetailsChanged(numberItem->getDetails());
+			}
+		}
+	}
+}
 
 void MapScene::updateSymbols()
 {

@@ -223,16 +223,43 @@ void MainWindow::onAboutQt()
 void MainWindow::onSelectButton()
 {
 	m_scene->setMode(MapScene::ModeSelect);
+
+	MapItem::Details details;
+	details.type = MapItem::None;
+
+	onItemDetailsChanged(details);
 }
 
 void MainWindow::onNumberButton()
 {
 	m_scene->setMode(MapScene::ModeNumber);
+
+	MapItem::Details details;
+	details.type = MapItem::Number;
+	details.number = m_scene->getNextNumber();
+
+	onItemDetailsChanged(details);
+}
+
+void MainWindow::onSymbolButton()
+{
+	m_scene->setMode(MapScene::ModeSymbol);
+
+	MapItem::Details details;
+	details.type = MapItem::Symbol;
+	details.symbol = m_scene->getCurrentSymbol();
+
+	onItemDetailsChanged(details);
 }
 
 void MainWindow::onZoomButton()
 {
 	m_scene->setMode(MapScene::ModeZoom);
+
+	MapItem::Details details;
+	details.type = MapItem::None;
+
+	onItemDetailsChanged(details);
 }
 
 void MainWindow::onImageButton()
@@ -384,7 +411,7 @@ void MainWindow::onItemDetailsChanged(const MapItem::Details &details)
 		xEdit->setText(QString::number(details.position.x()));
 		yEdit->setText(QString::number(details.position.y()));
 
-		if (details.number == -1)
+		if (details.type == MapItem::Image)
 		{
 			imageEdit->setText(details.image);
 

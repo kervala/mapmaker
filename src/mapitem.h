@@ -26,16 +26,43 @@ public:
 	MapItem(QGraphicsItem *parent);
 	virtual ~MapItem();
 
+	enum Type
+	{
+		None,
+		Image,
+		Number,
+		Symbol
+	};
+
+	struct Details
+	{
+		int type;
+		QPoint position;
+		QString image;
+		int number;
+		int symbol;
+	};
+
 	int getId() const;
 	void setId(int id);
 
+	QRectF boundingRect() const;
+	QPainterPath shape() const;
+
+	QSizeF getSize() const;
+
+	virtual Details getDetails() const;
+
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-	void serialize(QDataStream &stream) const;
-	void unserialize(QDataStream &stream);
+	virtual void serialize(QDataStream &stream) const;
+	virtual void unserialize(QDataStream &stream);
 
 protected:
 	int m_id;
+
+	QPainterPath m_path;
+	QRectF m_rect;
 };
 
 #endif

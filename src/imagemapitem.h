@@ -32,17 +32,14 @@ public:
 
 	int type() const { return Type; }
 
-	QRectF boundingRect() const;
-	QPainterPath shape() const;
-
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 	void setFilename(const QString &filename);
 	QString getFilename() const;
 
-	QSizeF getSize() const;
-
 	bool importImage(const QString &filename);
+
+	MapItem::Details getDetails() const;
 
 	void serialize(QDataStream &stream) const;
 	void unserialize(QDataStream &stream);
@@ -59,8 +56,6 @@ protected:
 	QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 	QString m_filename;
-	QPainterPath m_path;
-	QRectF m_rect;
 	QPixmap m_image;
 	QSvgRenderer m_svg;
 	QByteArray m_rawImage;

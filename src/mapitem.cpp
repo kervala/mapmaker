@@ -49,6 +49,29 @@ void MapItem::setId(int id)
 	m_id = id;
 }
 
+QRectF MapItem::boundingRect() const
+{
+	return m_rect;
+}
+
+QPainterPath MapItem::shape() const
+{
+	return m_path;
+}
+
+QSizeF MapItem::getSize() const
+{
+	return m_rect.size();
+}
+
+MapItem::Details MapItem::getDetails() const
+{
+	MapItem::Details details;
+	details.type = MapItem::None;
+	details.position = scenePos().toPoint();
+	return details;
+}
+
 static void qt_graphicsItem_highlightSelected(QGraphicsItem *item, QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
 	const QRectF murect = painter->transform().mapRect(QRectF(0, 0, 1, 1));

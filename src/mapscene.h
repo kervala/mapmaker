@@ -79,7 +79,7 @@ public:
 	static bool isProject(const QString &filename);
 
 signals:
-	void itemDetailsChanged(const MapScene::MapItemDetails &details);
+	void itemDetailsChanged(const MapItem::Details &details);
 	void zoomChanged(qreal zoom);
 	void sceneSizeUpdated();
 

@@ -32,9 +32,6 @@ public:
 
 	int type() const { return Type; }
 
-	QRectF boundingRect() const;
-	QPainterPath shape() const;
-
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 	int getNumber() const;
@@ -42,6 +39,8 @@ public:
 
 	int getParentId() const;
 	void setParentId(int id);
+
+	MapItem::Details getDetails() const;
 
 	void serialize(QDataStream &stream) const;
 	void unserialize(QDataStream &stream);
@@ -64,11 +63,8 @@ private:
 	int m_parentId;
 	int m_number;
 
-	QPainterPath m_path;
-	QRectF m_rect;
-
 	static QFont *s_font;
-	static QColor *s_color;
+	static QColor s_color;
 };
 
 QDataStream& operator << (QDataStream &stream, const NumberMapItem &item);

@@ -26,40 +26,34 @@
 #endif
 
 QFont* NumberMapItem::s_font = NULL;
-QColor* NumberMapItem::s_color = NULL;
+QColor NumberMapItem::s_color(Qt::white);
 
 NumberMapItem::NumberMapItem(QGraphicsItem *parent):MapItem(parent), m_number(0), m_parentId(-1)
 {
-//	QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect(scene());
-//	effect->setOffset(0);
-
-//	setGraphicsEffect(effect);
 }
 
 NumberMapItem::~NumberMapItem()
 {
 }
 
-QRectF NumberMapItem::boundingRect() const
-{
-	return m_rect;
-}
-
-QPainterPath NumberMapItem::shape() const
-{
-	return m_path;
-}
-
 void NumberMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	painter->save();
-	painter->setPen(QPen(*s_color, 0));
+	painter->setPen(QPen(s_color, 0));
 	painter->setFont(*s_font);
 	painter->drawText(option->rect, Qt::AlignCenter, QString::number(m_number));
 
 	MapItem::paint(painter, option, widget);
 
 	painter->restore();
+}
+
+MapItem::Details NumberMapItem::getDetails() const
+{
+	MapItem::Details details = MapItem::getDetails();
+	details.type = MapItem::Number;
+	details.number = m_number;
+	return details;
 }
 
 QVariant NumberMapItem::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -79,11 +73,7 @@ QVariant NumberMapItem::itemChange(GraphicsItemChange change, const QVariant &va
 
 	if (change == ItemPositionHasChanged && scene())
 	{
-		MapScene::MapItemDetails details;
-		details.position = value.toPoint();
-		details.number = m_number;
-
-		emit qobject_cast<MapScene*>(scene())->itemDetailsChanged(details);
+		emit qobject_cast<MapScene*>(scene())->itemDetailsChanged(getDetails());
 	}
 
 	// just return the QVariant
@@ -93,7 +83,6 @@ QVariant NumberMapItem::itemChange(GraphicsItemChange change, const QVariant &va
 void NumberMapItem::initFont()
 {
 	if (!s_font) s_font = new QFont("Arial", 20);
-	if (!s_color) s_color = new QColor(Qt::white);
 }
 
 void NumberMapItem::releaseFont()
@@ -102,12 +91,6 @@ void NumberMapItem::releaseFont()
 	{
 		delete s_font;
 		s_font = NULL;
-	}
-
-	if (s_color)
-	{
-		delete s_color;
-		s_color = NULL;
 	}
 }
 
@@ -169,12 +152,12 @@ QFont NumberMapItem::getFont()
 
 void NumberMapItem::setColor(const QColor &color)
 {
-	*s_color = color;
+	s_color = color;
 }
 
 QColor NumberMapItem::getColor()
 {
-	return *s_color;
+	return s_color;
 }
 
 void NumberMapItem::serialize(QDataStream &stream) const
