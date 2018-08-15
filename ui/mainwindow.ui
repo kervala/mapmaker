@@ -24,9 +24,12 @@
       <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <layout class="QHBoxLayout" name="toolsLayout" stretch="0,0,0,1">
+         <layout class="QHBoxLayout" name="toolsLayout" stretch="0,0,0,0,1">
           <item>
            <widget class="QToolButton" name="selectButton">
+            <property name="toolTip">
+             <string>Select and move tool</string>
+            </property>
             <property name="text">
              <string>Select</string>
             </property>
@@ -50,6 +53,9 @@
           </item>
           <item>
            <widget class="QToolButton" name="numberButton">
+            <property name="toolTip">
+             <string>Add number tool</string>
+            </property>
             <property name="text">
              <string>Number</string>
             </property>
@@ -168,6 +174,9 @@
              </item>
              <item>
               <widget class="QToolButton" name="validatePositionButton">
+               <property name="toolTip">
+                <string>Validate position</string>
+               </property>
                <property name="text">
                 <string>...</string>
                </property>
@@ -214,6 +223,9 @@
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
               <widget class="QToolButton" name="validateNumberButton">
+               <property name="toolTip">
+                <string>Validate number</string>
+               </property>
                <property name="text">
                 <string>Update</string>
                </property>
@@ -228,6 +240,9 @@
              </item>
              <item>
               <widget class="QToolButton" name="recomputeButton">
+               <property name="toolTip">
+                <string>Recompute all numbers</string>
+               </property>
                <property name="text">
                 <string>Renumerote</string>
                </property>
@@ -242,6 +257,9 @@
              </item>
              <item>
               <widget class="QToolButton" name="incrementButton">
+               <property name="toolTip">
+                <string>Increment all numbers from this one</string>
+               </property>
                <property name="text">
                 <string>+</string>
                </property>
@@ -252,6 +270,9 @@
              </item>
              <item>
               <widget class="QToolButton" name="fontButton">
+               <property name="toolTip">
+                <string>Change font for numbers</string>
+               </property>
                <property name="text">
                 <string>Numbers font</string>
                </property>
@@ -537,6 +558,9 @@
             <layout class="QHBoxLayout" name="imageButtonsHorizontalLayout">
              <item>
               <widget class="QToolButton" name="imageButton">
+               <property name="toolTip">
+                <string>Add/change an image</string>
+               </property>
                <property name="text">
                 <string>Add or change image</string>
                </property>
@@ -725,6 +749,35 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>graphicsView</tabstop>
+  <tabstop>selectButton</tabstop>
+  <tabstop>numberButton</tabstop>
+  <tabstop>symbolButton</tabstop>
+  <tabstop>zoomButton</tabstop>
+  <tabstop>xEdit</tabstop>
+  <tabstop>yEdit</tabstop>
+  <tabstop>validatePositionButton</tabstop>
+  <tabstop>numberEdit</tabstop>
+  <tabstop>validateNumberButton</tabstop>
+  <tabstop>recomputeButton</tabstop>
+  <tabstop>incrementButton</tabstop>
+  <tabstop>fontButton</tabstop>
+  <tabstop>numberColorButton</tabstop>
+  <tabstop>symbolCrossButton</tabstop>
+  <tabstop>symbolCircleButton</tabstop>
+  <tabstop>symbolCircleFilledButton</tabstop>
+  <tabstop>symbolSquareButton</tabstop>
+  <tabstop>symbolSquareFilledButton</tabstop>
+  <tabstop>symbolTriangleButton</tabstop>
+  <tabstop>symbolTriangleFilledButton</tabstop>
+  <tabstop>symbolSizeSpinBox</tabstop>
+  <tabstop>symbolColorButton</tabstop>
+  <tabstop>imageEdit</tabstop>
+  <tabstop>imageButton</tabstop>
+  <tabstop>originForegroundColorButton</tabstop>
+  <tabstop>finalForegroundColorButton</tabstop>
+ </tabstops>
  <resources>
   <include location="../res/resources.qrc"/>
  </resources>
