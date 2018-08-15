@@ -55,7 +55,11 @@ void ImageMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 	// to speed up drawing of image while resizing or rotating
 //	painter->setRenderHint(QPainter::SmoothPixmapTransform, true); // put to false while resizing
 
-	if (!m_image.isNull())
+	if (m_svg.isValid())
+	{
+		m_svg.render(painter, m_rect);
+	}
+	else if (!m_image.isNull())
 	{
 		painter->drawPixmap(QPointF(0.f, 0.f), m_image);
 	}
@@ -72,8 +76,6 @@ void ImageMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 		painter->setPen(Qt::red);
 		painter->drawLines(lines);
 	}
-
-//	if (m_svg.isValid()) m_svg.render(painter, m_rect);
 
 	MapItem::paint(painter, option, widget);
 
@@ -185,25 +187,42 @@ bool ImageMapItem::updateImage()
 		m_rect.setRight(100);
 		m_rect.setBottom(100);
 	}
-	else
+	// SVG ?
+	else if (m_rawImage.indexOf("<svg") > -1)
 	{
-		// reload image
-		if (!m_image.loadFromData(m_rawImage)) return false;
+		QString xml = QString::fromUtf8(m_rawImage);
 
 		// colorize image
 		if (s_finalForegroundColor.isValid())
 		{
+			QString srcColor = s_originForegroundColor.name();
+			QString dstColor = s_finalForegroundColor.name();
 
+			xml.replace(":" + srcColor, ":" + dstColor);
+		}
+
+		if (!m_svg.load(xml.toUtf8())) return false;
+
+		// view box size is always in mm, convert it to pixels in 96 dpi
+		m_rect.setRight(m_svg.viewBox().width() * 96 / 25.4);
+		m_rect.setBottom(m_svg.viewBox().height() * 96 / 25.4);
+	}
+	// try to load image
+	else if (m_image.loadFromData(m_rawImage))
+	{
+		m_rect.setRight(m_image.width());
+		m_rect.setBottom(m_image.height());
+
+		// colorize image
+		if (s_finalForegroundColor.isValid())
+		{
 			QBitmap mask = m_image.createMaskFromColor(s_originForegroundColor, Qt::MaskOutColor);
 
 			QPainter p(&m_image);
 			p.setPen(s_finalForegroundColor);
-			p.drawPixmap(m_image.rect(), mask, mask.rect());
+			p.drawPixmap(m_image.rect(), mask, m_rect);
 			p.end();
 		}
-
-		m_rect.setRight(m_image.width());
-		m_rect.setBottom(m_image.height());
 	}
 
 	m_path = QPainterPath();

@@ -62,7 +62,7 @@ protected:
 	QPainterPath m_path;
 	QRectF m_rect;
 	QPixmap m_image;
-//	QSvgRenderer m_svg;
+	QSvgRenderer m_svg;
 	QByteArray m_rawImage;
 
 	static QColor s_originForegroundColor;

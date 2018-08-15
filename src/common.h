@@ -37,6 +37,7 @@
 #include <QtNetwork/QtNetwork>
 #include <QtXml/QtXml>
 #include <QtSql/QtSql>
+#include <QtSvg/QtSvg>
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
 #define USE_QT5
