@@ -1,5 +1,12 @@
 <RCC>
   <qresource prefix="/icons">
+    <file>triangle.png</file>
+    <file>triangle_filled.png</file>
+    <file>circle.png</file>
+    <file>circle_filled.png</file>
+    <file>square.png</file>
+    <file>square_filled.png</file>
+    <file>cross.png</file>
     <file>recompute.png</file>
     <file>validate.png</file>
     <file>color.png</file>
@@ -8,6 +15,8 @@
     <file>image.png</file>
     <file>number.png</file>
     <file>select.png</file>
+    <file>symbol.png</file>
+    <file>zoom.png</file>
   </qresource>
   <qresource prefix="/images"/>
 </RCC>

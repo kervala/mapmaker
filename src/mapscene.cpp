@@ -35,13 +35,13 @@ struct SMagicHeader
 };
 
 SMagicHeader s_header = { "PAMK" };
-quint32 s_version = 1;
+quint32 s_version = 2;
 
 #ifdef DEBUG_NEW
 	#define new DEBUG_NEW
 #endif
 
-MapScene::MapScene(QObject *parent):QGraphicsScene(parent), m_mode(ModeSelect), m_nextNumber(1), m_nextId(0), m_zoom(1.0)
+MapScene::MapScene(QObject *parent):QGraphicsScene(parent), m_mode(ModeSelect), m_nextNumber(1), m_nextId(0), m_zoom(1.0), m_currentSymbol(SymbolMapItem::SymbolCross)
 {
 	NumberMapItem::initFont();
 
@@ -145,6 +145,18 @@ bool MapScene::load(const QString &filename)
 	// background color
 	stream >> color;
 
+	if (version >= 2)
+	{
+		// symbols size
+		int size;
+		stream >> size;
+		SymbolMapItem::setSize(size);
+
+		// symbols color
+		stream >> color;
+		SymbolMapItem::setColor(color);
+	}
+
 	stream >> m_nextNumber;
 	stream >> m_nextId;
 
@@ -190,6 +202,34 @@ bool MapScene::load(const QString &filename)
 		}
 	}
 
+	if (version >= 2)
+	{
+		qint32 symbolsCount = 0;
+		stream >> numbersCount;
+
+		for (int i = 0; i < symbolsCount; ++i)
+		{
+			SymbolMapItem *symbolItem = new SymbolMapItem(NULL);
+			stream >> *symbolItem;
+
+			it = imagesItems.find(symbolItem->getParentId());
+
+			if (it != imagesItems.end())
+			{
+				// found a parent
+				symbolItem->setParentItem(*it);
+			}
+			else
+			{
+				qDebug() << "Unable to find parent" << symbolItem->getParentId();
+
+				delete symbolItem;
+
+				continue;
+			}
+		}
+	}
+
 	updateSceneSize();
 
 	return true;
@@ -229,19 +269,25 @@ bool MapScene::save(const QString &filename)
 	// background color
 	stream << QColor();
 
+	stream << SymbolMapItem::getSize();
+	stream << SymbolMapItem::getColor();
+
 	stream << m_nextNumber;
 	stream << m_nextId;
 
 	qint32 imagesCount = 0;
 	qint32 numbersCount = 0;
+	qint32 symbolsCount = 0;
 
 	foreach(QGraphicsItem *item, items())
 	{
 		ImageMapItem *imageItem = qgraphicsitem_cast<ImageMapItem*>(item);
 		NumberMapItem *numberItem = qgraphicsitem_cast<NumberMapItem*>(item);
+		SymbolMapItem *symbolItem = qgraphicsitem_cast<SymbolMapItem*>(item);
 
 		if (imageItem) ++imagesCount;
 		if (numberItem) ++numbersCount;
+		if (symbolItem) ++symbolsCount;
 	}
 
 	stream << imagesCount;
@@ -265,6 +311,18 @@ bool MapScene::save(const QString &filename)
 		if (numberItem)
 		{
 			stream << *numberItem;
+		}
+	}
+
+	stream << symbolsCount;
+
+	foreach(QGraphicsItem *item, items())
+	{
+		SymbolMapItem *symbolItem = qgraphicsitem_cast<SymbolMapItem*>(item);
+
+		if (symbolItem)
+		{
+			stream << *symbolItem;
 		}
 	}
 
@@ -314,6 +372,21 @@ bool MapScene::changeSelectedImage(const QString &filename)
 	return false;
 }
 
+bool MapScene::getNextNumber() const
+{
+	return m_nextNumber;
+}
+
+SymbolMapItem::Symbol MapScene::getCurrentSymbol() const
+{
+	return m_currentSymbol;
+}
+
+void MapScene::setCurrentSymbol(SymbolMapItem::Symbol symbol)
+{
+	m_currentSymbol = symbol;
+}
+
 void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	bool mustProcess = true;
@@ -347,10 +420,26 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 				item->setNumber(m_nextNumber);
 				item->setParentId(parentItem->getId());
 
-				++m_nextNumber;
-				++m_nextId;
+					++m_nextNumber;
+				}
+				else if (m_mode == ModeSymbol)
+				{
+					SymbolMapItem *symbolItem = new SymbolMapItem(parentItem);
+					symbolItem->setParentId(parentItem->getId());
+					symbolItem->setSymbol(m_currentSymbol);
 
-				mustProcess = false;
+					item = symbolItem;
+				}
+
+				if (item)
+				{
+					item->setId(m_nextId);
+					item->setPos(parentItem->mapFromParent(mouseEvent->scenePos()));
+
+					++m_nextId;
+
+					mustProcess = false;
+				}
 			}
 		}
 	}
@@ -594,7 +683,19 @@ void MapScene::updateNumbers()
 				details.position = numberItem->pos().toPoint();
 				details.number = numberItem->getNumber();
 
-				emit itemDetailsChanged(details);
+void MapScene::updateSymbols()
+{
+	foreach(QGraphicsItem *item, items())
+	{
+		SymbolMapItem *symbolItem = qgraphicsitem_cast<SymbolMapItem*>(item);
+
+		if (symbolItem)
+		{
+			symbolItem->updateSymbol();
+
+			if (item->isSelected())
+			{
+				emit itemDetailsChanged(symbolItem->getDetails());
 			}
 		}
 	}

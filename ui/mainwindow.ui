@@ -69,9 +69,39 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="zoomButton">
+           <widget class="QToolButton" name="symbolButton">
+            <property name="toolTip">
+             <string>Add symbol tool</string>
+            </property>
             <property name="text">
-             <string>Z</string>
+             <string>Symbol</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/symbol.png</normaloff>:/icons/symbol.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="zoomButton">
+            <property name="toolTip">
+             <string>Zoom tool</string>
+            </property>
+            <property name="text">
+             <string>Zoom</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/zoom.png</normaloff>:/icons/zoom.png</iconset>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -250,6 +280,215 @@
              </item>
              <item>
               <spacer name="numberHorizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="symbolFrame">
+          <layout class="QVBoxLayout" name="symbolVerticalLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="symbolLabel">
+             <property name="text">
+              <string>Symbol</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="symbolHorizontalLayout">
+             <item>
+              <widget class="QToolButton" name="symbolCrossButton">
+               <property name="text">
+                <string>Cross</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/cross.png</normaloff>:/icons/cross.png</iconset>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>true</bool>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="symbolCircleButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/circle.png</normaloff>:/icons/circle.png</iconset>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>true</bool>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="symbolCircleFilledButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/circle_filled.png</normaloff>:/icons/circle_filled.png</iconset>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>true</bool>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="symbolSquareButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/square.png</normaloff>:/icons/square.png</iconset>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>true</bool>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="symbolSquareFilledButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/square_filled.png</normaloff>:/icons/square_filled.png</iconset>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>true</bool>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="symbolTriangleButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/triangle.png</normaloff>:/icons/triangle.png</iconset>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>true</bool>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="symbolTriangleFilledButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/triangle_filled.png</normaloff>:/icons/triangle_filled.png</iconset>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>true</bool>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="symbolSizeSpinBox">
+               <property name="minimum">
+                <number>5</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="symbolColorButton">
+               <property name="toolTip">
+                <string>Change font color for numbers</string>
+               </property>
+               <property name="text">
+                <string>Numbers color</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/color.png</normaloff>:/icons/color.png</iconset>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="symbolHorizontalSpacer">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>

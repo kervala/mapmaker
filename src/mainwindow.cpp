@@ -68,6 +68,7 @@ MainWindow::MainWindow():QMainWindow()
 	// tool bars
 	connect(selectButton, SIGNAL(clicked()), this, SLOT(onSelectButton()));
 	connect(numberButton, SIGNAL(clicked()), this, SLOT(onNumberButton()));
+	connect(symbolButton, SIGNAL(clicked()), this, SLOT(onSymbolButton()));
 	connect(zoomButton, SIGNAL(clicked()), this, SLOT(onZoomButton()));
 
 	// numbers
@@ -105,6 +106,7 @@ MainWindow::MainWindow():QMainWindow()
 	positionFrame->setVisible(false);
 	imageFrame->setVisible(false);
 	numberFrame->setVisible(false);
+	symbolFrame->setVisible(false);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -328,14 +330,51 @@ void MainWindow::onFinalForegroundColorButton()
 	}
 }
 
-void MainWindow::onItemDetailsChanged(const MapScene::MapItemDetails &details)
+void MainWindow::onSymbolImageButton()
 {
-	if (details.position == QPoint(-1, -1))
+	QObject *button = sender();
+
+	if (button == symbolCrossButton) m_scene->setCurrentSymbol(SymbolMapItem::SymbolCross);
+	if (button == symbolCircleButton) m_scene->setCurrentSymbol(SymbolMapItem::SymbolCircle);
+	if (button == symbolCircleFilledButton) m_scene->setCurrentSymbol(SymbolMapItem::SymbolCircleFilled);
+	if (button == symbolSquareButton) m_scene->setCurrentSymbol(SymbolMapItem::SymbolSquare);
+	if (button == symbolSquareFilledButton) m_scene->setCurrentSymbol(SymbolMapItem::SymbolSquareFilled);
+	if (button == symbolTriangleButton) m_scene->setCurrentSymbol(SymbolMapItem::SymbolTriangle);
+	if (button == symbolTriangleFilledButton) m_scene->setCurrentSymbol(SymbolMapItem::SymbolTriangleFilled);
+}
+
+void MainWindow::onSymbolColorButton()
+{
+	QColor oldColor = SymbolMapItem::getColor();
+
+	QColor newColor = QColorDialog::getColor(oldColor, this, tr("Choose color for symbols"));
+
+	if (oldColor != newColor)
+	{
+		m_symbolColorAction->setCurrentColor(newColor);
+
+		SymbolMapItem::setColor(newColor);
+
+		m_scene->updateSymbols();
+	}
+}
+
+void MainWindow::onSymbolSizeChanged(int size)
+{
+	SymbolMapItem::setSize(size);
+
+	m_scene->updateSymbols();
+}
+
+void MainWindow::onItemDetailsChanged(const MapItem::Details &details)
+{
+	if (details.type == MapItem::None)
 	{
 		// unselected
 		positionFrame->setVisible(false);
 		imageFrame->setVisible(false);
 		numberFrame->setVisible(false);
+		symbolFrame->setVisible(false);
 	}
 	else
 	{
@@ -352,12 +391,50 @@ void MainWindow::onItemDetailsChanged(const MapScene::MapItemDetails &details)
 			imageFrame->setVisible(true);
 			numberFrame->setVisible(false);
 		}
-		else
+		else if (details.type == MapItem::Symbol)
+		{
+			switch (details.symbol)
+			{
+			case SymbolMapItem::SymbolCross:
+				symbolCrossButton->setChecked(true);
+				break;
+
+			case SymbolMapItem::SymbolCircle:
+				symbolCircleButton->setChecked(true);
+				break;
+
+			case SymbolMapItem::SymbolCircleFilled:
+				symbolCircleFilledButton->setChecked(true);
+				break;
+
+			case SymbolMapItem::SymbolSquare:
+				symbolSquareButton->setChecked(true);
+				break;
+
+			case SymbolMapItem::SymbolSquareFilled:
+				symbolSquareFilledButton->setChecked(true);
+				break;
+
+			case SymbolMapItem::SymbolTriangle:
+				symbolTriangleButton->setChecked(true);
+				break;
+
+			case SymbolMapItem::SymbolTriangleFilled:
+				symbolTriangleFilledButton->setChecked(true);
+				break;
+			}
+
+			imageFrame->setVisible(false);
+			numberFrame->setVisible(false);
+			symbolFrame->setVisible(true);
+		}
+		else if (details.type == MapItem::Number)
 		{
 			numberEdit->setText(QString::number(details.number));
 
 			imageFrame->setVisible(false);
 			numberFrame->setVisible(true);
+			symbolFrame->setVisible(false);
 		}
 	}
 }

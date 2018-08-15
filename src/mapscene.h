@@ -20,6 +20,8 @@
 #ifndef MAPSCENE_H
 #define MAPSCENE_H
 
+#include "symbolmapitem.h"
+
 class MapScene : public QGraphicsScene
 {
 	Q_OBJECT
@@ -29,14 +31,8 @@ public:
 	{
 		ModeSelect,
 		ModeNumber,
+		ModeSymbol,
 		ModeZoom
-	};
-
-	struct MapItemDetails
-	{
-		QPoint position;
-		int number;
-		QString image;
 	};
 
 	MapScene(QObject *parent);
@@ -61,8 +57,14 @@ public:
 
 	bool changeSelectedImage(const QString &filename);
 
+	bool getNextNumber() const;
+
+	SymbolMapItem::Symbol getCurrentSymbol() const;
+	void setCurrentSymbol(SymbolMapItem::Symbol symbol);
+
 	void updateNumbers();
 	void updateImages();
+	void updateSymbols();
 	void recomputeNumbers();
 
 	void validateNumber(int number);
@@ -103,6 +105,8 @@ private:
 	int m_nextNumber;
 	int m_nextId;
 	qreal m_zoom;
+
+	SymbolMapItem::Symbol m_currentSymbol;
 };
 
 #endif
