@@ -205,7 +205,7 @@ bool MapScene::load(const QString &filename)
 	if (version >= 2)
 	{
 		qint32 symbolsCount = 0;
-		stream >> numbersCount;
+		stream >> symbolsCount;
 
 		for (int i = 0; i < symbolsCount; ++i)
 		{
