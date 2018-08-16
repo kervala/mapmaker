@@ -26,7 +26,7 @@
 #endif
 
 int SymbolMapItem::s_size = 10;
-QColor SymbolMapItem::s_color;
+QColor SymbolMapItem::s_color(Qt::black);
 
 SymbolMapItem::SymbolMapItem(QGraphicsItem *parent):MapItem(parent), m_symbol(SymbolCross), m_parentId(-1)
 {

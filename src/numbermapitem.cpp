@@ -26,7 +26,7 @@
 #endif
 
 QFont* NumberMapItem::s_font = NULL;
-QColor NumberMapItem::s_color(Qt::white);
+QColor NumberMapItem::s_color(Qt::black);
 
 NumberMapItem::NumberMapItem(QGraphicsItem *parent):MapItem(parent), m_number(0), m_parentId(-1)
 {
