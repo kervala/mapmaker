@@ -121,13 +121,9 @@ MainWindow::MainWindow():QMainWindow(), m_logsDialog(NULL), m_scene(NULL), m_num
 	setInfo(tr("Starting %1").arg(PRODUCT));
 
 	m_scene = new MapScene(this);
-//	m_scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 
 	graphicsView->setScene(m_scene);
-//	graphicsView->setCacheMode(QGraphicsView::CacheBackground);
 	graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-//	graphicsView->setRenderHint(QPainter::Antialiasing);
-//	graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 	graphicsView->verticalScrollBar()->setSliderPosition(1);
 	graphicsView->horizontalScrollBar()->setSliderPosition(1);
 

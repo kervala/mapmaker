@@ -131,7 +131,6 @@ int main(int argc, char *argv[])
 			mainWindow.setWindowTitle(QString("%1 %2").arg(app->applicationName()).arg(app->applicationVersion()));
 			mainWindow.show();
 
-			// only memory leaks are from plugins
 			return app->exec();
 		}
 	}
