@@ -29,10 +29,6 @@ MapItem::MapItem(QGraphicsItem *parent):QGraphicsItem(parent), m_id(0)
 	setFlag(ItemIsMovable);
 	setFlag(ItemSendsGeometryChanges);
 	setFlag(ItemIsSelectable);
-//	setFlag(ItemIsFocusable);
-
-//	setCacheMode(DeviceCoordinateCache);
-//	setZValue(-1);
 }
 
 MapItem::~MapItem()
@@ -51,7 +47,7 @@ void MapItem::setId(int id)
 
 QRectF MapItem::boundingRect() const
 {
-	return m_rect;
+	return m_selectionRect;
 }
 
 QPainterPath MapItem::shape() const
@@ -72,15 +68,14 @@ MapItem::Details MapItem::getDetails() const
 	return details;
 }
 
-static void qt_graphicsItem_highlightSelected(QGraphicsItem *item, QPainter *painter, const QStyleOptionGraphicsItem *option)
+void MapItem::drawSelection(QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
 	const QRectF murect = painter->transform().mapRect(QRectF(0, 0, 1, 1));
 	if (qFuzzyIsNull(qMax(murect.width(), murect.height()))) return;
 
-	const QRectF mbrect = painter->transform().mapRect(item->boundingRect());
+	const QRectF mbrect = painter->transform().mapRect(boundingRect());
 	if (qMin(mbrect.width(), mbrect.height()) < qreal(1.0)) return;
 
-	const qreal pad = 0.5f;
 	const qreal penWidth = 0; // cosmetic pen
 	const QColor fgcolor = option->palette.windowText().color();
 
@@ -92,19 +87,25 @@ static void qt_graphicsItem_highlightSelected(QGraphicsItem *item, QPainter *pai
 
 	painter->setPen(QPen(bgcolor, penWidth, Qt::SolidLine));
 	painter->setBrush(Qt::NoBrush);
-	painter->drawRect(item->boundingRect().adjusted(pad, pad, -pad, -pad));
+	painter->drawPath(m_selectionPath);
 
-	painter->setPen(QPen(option->palette.windowText(), 0, Qt::DashLine));
+	painter->setPen(QPen(option->palette.windowText(), penWidth, Qt::DashLine));
 	painter->setBrush(Qt::NoBrush);
-	painter->drawRect(item->boundingRect().adjusted(pad, pad, -pad, -pad));
+	painter->drawPath(m_selectionPath);
 }
 
 void MapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *)
 {
 	if (option->state & QStyle::State_Selected)
 	{
-		qt_graphicsItem_highlightSelected(this, painter, option);
+		drawSelection(painter, option);
 	}
+}
+
+void MapItem::createShape(QPainterPath &path, const QRectF &rect)
+{
+	path = QPainterPath();
+	path.addRect(rect);
 }
 
 void MapItem::serialize(QDataStream &stream) const

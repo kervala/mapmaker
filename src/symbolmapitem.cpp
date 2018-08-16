@@ -73,7 +73,7 @@ void SymbolMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 	case SymbolTriangle:
 	{
 		QPolygon polygon;
-		polygon << QPoint(m_rect.left() + m_rect.right() / 2, m_rect.top());
+		polygon << QPoint(m_rect.left() + m_rect.width() / 2, m_rect.top());
 		polygon << QPoint(m_rect.left(), m_rect.bottom());
 		polygon << QPoint(m_rect.right(), m_rect.bottom());
 		painter->drawPolygon(polygon);
@@ -85,7 +85,7 @@ void SymbolMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 		painter->setBrush(QBrush(s_color));
 
 		QPolygon polygon;
-		polygon << QPoint(m_rect.left() + m_rect.right() / 2, m_rect.top());
+		polygon << QPoint(m_rect.left() + m_rect.width() / 2, m_rect.top());
 		polygon << QPoint(m_rect.left(), m_rect.bottom());
 		polygon << QPoint(m_rect.right(), m_rect.bottom());
 		painter->drawPolygon(polygon);
@@ -152,12 +152,46 @@ bool SymbolMapItem::updateSymbol()
 	m_rect.setWidth(s_size);
 	m_rect.setHeight(s_size);
 
-	m_path = QPainterPath();
-	m_path.addEllipse(m_rect);
+	m_selectionRect = m_rect.adjusted(-2.0, -2.0, 2.0, 2.0);
+
+	createShape(m_path, m_rect);
+	createShape(m_selectionPath, m_selectionRect);
 
 	update();
 
 	return true;
+}
+
+void SymbolMapItem::createShape(QPainterPath &path, const QRectF &rect)
+{
+	path = QPainterPath();
+
+	switch (m_symbol)
+	{
+	case SymbolCross:
+	case SymbolSquare:
+	case SymbolSquareFilled:
+		path.addRect(rect);
+		break;
+
+	case SymbolCircle:
+	case SymbolCircleFilled:
+		path.addEllipse(rect);
+		break;
+
+	case SymbolTriangle:
+	case SymbolTriangleFilled:
+	{
+		QPolygonF polygon;
+		polygon << QPointF(rect.left() + rect.width() / 2, rect.top());
+		polygon << QPointF(rect.left(), rect.bottom());
+		polygon << QPointF(rect.right(), rect.bottom());
+		polygon.translate(0, -0.5);
+		path.addPolygon(polygon);
+		path.closeSubpath();
+		break;
+	}
+	}
 }
 
 int SymbolMapItem::getParentId() const

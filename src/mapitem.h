@@ -59,10 +59,16 @@ public:
 	virtual void unserialize(QDataStream &stream);
 
 protected:
+	virtual void createShape(QPainterPath &path, const QRectF &rect);
+
+	void drawSelection(QPainter *painter, const QStyleOptionGraphicsItem *option);
+
 	int m_id;
 
 	QPainterPath m_path;
+	QPainterPath m_selectionPath;
 	QRectF m_rect;
+	QRectF m_selectionRect;
 };
 
 #endif

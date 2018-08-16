@@ -213,8 +213,10 @@ bool ImageMapItem::updateImage()
 		}
 	}
 
-	m_path = QPainterPath();
-	m_path.addRect(m_rect);
+	createShape(m_path, m_rect);
+
+	m_selectionPath = m_path;
+	m_selectionRect = m_rect;
 
 	update();
 

@@ -70,7 +70,10 @@ public:
 protected:
 	QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
+	virtual void createShape(QPainterPath &path, const QRectF &rect);
+
 private:
+
 	int m_parentId;
 	Symbol m_symbol;
 
