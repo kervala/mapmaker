@@ -258,7 +258,12 @@ void MainWindow::onNew()
 
 void MainWindow::onOpen()
 {
-	QString filename = QFileDialog::getOpenFileName(this, tr("Open project"), m_scene->getFilename(), tr("Map files (*.kmf)"));
+	QString filename = m_scene->getFilename();
+
+	// if no project has been loaded, use last saved directory
+	if (filename.isEmpty()) filename = ConfigFile::getInstance()->getLastDirectory();
+
+	filename = QFileDialog::getOpenFileName(this, tr("Open project"), filename, tr("Map files (*.kmf)"));
 
 	if (filename.isEmpty())
 		return;
@@ -266,6 +271,10 @@ void MainWindow::onOpen()
 	if (!m_scene->load(filename))
 	{
 		setError(tr("Unable to load %1").arg(filename));
+	}
+	else
+	{
+		ConfigFile::getInstance()->setLastDirectory(QFileInfo(filename).absolutePath());
 	}
 }
 
@@ -283,8 +292,13 @@ void MainWindow::onSave()
 
 void MainWindow::onSaveAs()
 {
-	QString filename = QFileDialog::getSaveFileName(this, tr("Save project"), m_scene->getFilename(), tr("Map files (*.kmf)"));
+	QString filename = m_scene->getFilename();
 
+	// if no project has been loaded, use last saved directory
+	if (filename.isEmpty()) filename = ConfigFile::getInstance()->getLastDirectory();
+
+	filename = QFileDialog::getSaveFileName(this, tr("Save project"), filename, tr("Map files (*.kmf)"));
+	
 	if (filename.isEmpty())
 		return;
 
@@ -292,11 +306,17 @@ void MainWindow::onSaveAs()
 	{
 		setError(tr("Unable to save %1").arg(filename));
 	}
+	else
+	{
+		ConfigFile::getInstance()->setLastDirectory(QFileInfo(filename).absolutePath());
+	}
 }
 
 void MainWindow::onExport()
 {
-	QString filename = QFileDialog::getSaveFileName(this, tr("Export image"), "", m_supportedWriteFormats + ";;" + tr("SVG file (*.svg)") + ";;" + tr("PDF file (*.pdf)"));
+	QString filename = ConfigFile::getInstance()->getLastDirectory();
+
+	filename = QFileDialog::getSaveFileName(this, tr("Export image"), filename, m_supportedWriteFormats + ";;" + tr("SVG file (*.svg)") + ";;" + tr("PDF file (*.pdf)"));
 
 	if (filename.isEmpty())
 		return;
@@ -304,6 +324,10 @@ void MainWindow::onExport()
 	if (!m_scene->exportImage(filename))
 	{
 		setError(tr("Unable to export map to image %1").arg(filename));
+	}
+	else
+	{
+		ConfigFile::getInstance()->setLastDirectory(QFileInfo(filename).absolutePath());
 	}
 }
 
@@ -367,7 +391,12 @@ void MainWindow::onZoomButton()
 
 void MainWindow::onImageButton()
 {
-	QString filename = QFileDialog::getOpenFileName(this, tr("Change image"), imageEdit->text(), m_supportedReadFormats);
+	QString filename = imageEdit->text();
+
+	// if no project has been loaded, use last saved directory
+	if (filename.isEmpty()) filename = ConfigFile::getInstance()->getLastDirectory();
+
+	filename = QFileDialog::getOpenFileName(this, tr("Change image"), filename, m_supportedReadFormats);
 
 	if (filename.isEmpty())
 		return;
@@ -377,6 +406,10 @@ void MainWindow::onImageButton()
 		if (!m_scene->importImage(filename))
 		{
 			setError(tr("Unable to open image %1").arg(filename));
+		}
+		else
+		{
+			ConfigFile::getInstance()->setLastDirectory(QFileInfo(filename).absolutePath());
 		}
 	}
 }
@@ -607,7 +640,9 @@ void MainWindow::setInfo(const QString &error)
 
 void MainWindow::onImportImages()
 {
-	QStringList filenames = QFileDialog::getOpenFileNames(this, tr("Import images"), "", m_supportedReadFormats);
+	QString filename = ConfigFile::getInstance()->getLastDirectory();
+
+	QStringList filenames = QFileDialog::getOpenFileNames(this, tr("Import images"), filename, m_supportedReadFormats);
 
 	if (filenames.isEmpty())
 		return;

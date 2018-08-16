@@ -133,6 +133,9 @@ bool ConfigFile::loadVersion1()
 	LOAD_INT_VAR(SymbolSize);
 	LOAD_QCOLOR_VAR(SymbolColor);
 
+	// files
+	LOAD_QSTRING_VAR(LastDirectory);
+
 	// window parameters
 	m_settings.beginGroup("window");
 
@@ -164,6 +167,9 @@ bool ConfigFile::save()
 	SAVE_INT_VAR(SymbolSize);
 	SAVE_QCOLOR_VAR(SymbolColor);
 
+	// files
+	SAVE_QSTRING_VAR(LastDirectory);
+
 	// window parameters
 	m_settings.beginGroup("window");
 
@@ -188,6 +194,9 @@ IMPLEMENT_QFONT_VAR(NumberFont);
 // symbol
 IMPLEMENT_INT_VAR(SymbolSize);
 IMPLEMENT_QCOLOR_VAR(SymbolColor);
+
+// files
+IMPLEMENT_QSTRING_VAR(LastDirectory);
 
 QSize ConfigFile::getWindowSize() const
 {

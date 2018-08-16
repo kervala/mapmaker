@@ -71,6 +71,9 @@ public:
 	DECLARE_INT_VAR(SymbolSize);
 	DECLARE_QCOLOR_VAR(SymbolColor);
 
+	// files
+	DECLARE_QSTRING_VAR(LastDirectory);
+
 public:
 	QSize getWindowSize() const;
 	void setWindowSize(const QSize &size);
