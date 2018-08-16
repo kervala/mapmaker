@@ -244,7 +244,7 @@
                 <string>Recompute all numbers</string>
                </property>
                <property name="text">
-                <string>Renumerote</string>
+                <string>Recompute</string>
                </property>
                <property name="icon">
                 <iconset resource="../res/resources.qrc">
