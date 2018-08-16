@@ -20,58 +20,58 @@
 #ifndef CONFIGFILE_H
 #define CONFIGFILE_H
 
-#define DECLARE_QSTRING_VAR(function, var) \
+// int
+#define DECLARE_INT_VAR(var) \
 public:\
-	void set##function(const QString &var);\
-	QString get##function() const;\
-protected:\
-	QString m_##var;
-
-#define DECLARE_INT_VAR(function, var) \
-public:\
-	void set##function(int var);\
-	int get##function() const;\
+	void set##var(int var);\
+	int get##var() const;\
 protected:\
 	int m_##var;
 
-#define DECLARE_BOOL_VAR(function, var) \
+// bool
+#define DECLARE_BOOL_VAR(var) \
 public:\
-	void set##function(bool var);\
-	bool get##function() const;\
+	void set##var(bool var);\
+	bool get##var() const;\
 protected:\
 	bool m_##var;
+
+// generic class
+#define DECLARE_CLASS_VAR(c, var) \
+public:\
+	void set##var(const c &var);\
+	c get##var() const;\
+protected:\
+	c m_##var;
+
+// specialized classes
+#define DECLARE_QSTRING_VAR(var) DECLARE_CLASS_VAR(QString, var)
+#define DECLARE_QCOLOR_VAR(var) DECLARE_CLASS_VAR(QColor, var)
+#define DECLARE_QFONT_VAR(var) DECLARE_CLASS_VAR(QFont, var)
 
 class ConfigFile : public QObject
 {
 	Q_OBJECT
 
 public:
-	ConfigFile(QObject* parent);
+	ConfigFile(QObject* parent = NULL);
 	virtual ~ConfigFile();
 
 	static ConfigFile* getInstance() { return s_instance; }
 
-DECLARE_QSTRING_VAR(PathOngoing, pathOngoing);
-DECLARE_QSTRING_VAR(PathArchived, pathArchived);
+	// image
+	DECLARE_QCOLOR_VAR(OriginForegroundColor);
+	DECLARE_QCOLOR_VAR(FinalForegroundColor);
 
-DECLARE_BOOL_VAR(UseProxyFiles, useProxyFiles);
-DECLARE_BOOL_VAR(UseProxyOthers, useProxyOthers);
+	// number
+	DECLARE_QCOLOR_VAR(NumberColor);
+	DECLARE_QFONT_VAR(NumberFont);
 
-DECLARE_QSTRING_VAR(UserAgent, userAgent);
+	// symbol
+	DECLARE_INT_VAR(SymbolSize);
+	DECLARE_QCOLOR_VAR(SymbolColor);
 
-DECLARE_QSTRING_VAR(Login, login);
-DECLARE_QSTRING_VAR(Password, password);
-
-DECLARE_QSTRING_VAR(ProxyFile, proxyFile);
-DECLARE_QSTRING_VAR(ProxyMd5, proxyMd5);
-DECLARE_QSTRING_VAR(ProxyScript, proxyScript);
-DECLARE_QSTRING_VAR(ProxyOutput, proxyOutput);
-DECLARE_QSTRING_VAR(ProxyIp, proxyIp);
-DECLARE_QSTRING_VAR(Proxy, proxy);
-
-DECLARE_QSTRING_VAR(LastIsbn, lastIsbn);
-DECLARE_QSTRING_VAR(LastFilter, lastFilter);
-
+public:
 	QSize getWindowSize() const;
 	void setWindowSize(const QSize &size);
 

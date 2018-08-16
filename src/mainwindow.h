@@ -82,8 +82,14 @@ public slots:
 	void setInfo(const QString &error);
 
 protected:
-	void closeEvent(QCloseEvent *event);
+	void closeEvent(QCloseEvent *e);
+	void resizeEvent(QResizeEvent *e);
+	void moveEvent(QMoveEvent *e);
+
 	void initSupportedFormats(bool write);
+
+	void getConfigFileDefaultValues();
+	void setConfigFileDefaultValues();
 
 	LogsDialog *m_logsDialog;
 	MapScene *m_scene;

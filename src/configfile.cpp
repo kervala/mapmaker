@@ -29,53 +29,76 @@
 	#define new DEBUG_NEW
 #endif
 
-#define IMPLEMENT_QSTRING_VAR(function, var) \
-void ConfigFile::set##function(const QString &var)\
+// int
+#define IMPLEMENT_INT_VAR(var) \
+void ConfigFile::set##var(int var)\
 {\
 	if (m_##var == var) return;\
 	\
 	m_##var = var;\
 }\
 \
-QString ConfigFile::get##function() const\
+int ConfigFile::get##var() const\
 {\
 	return m_##var;\
 }
 
-#define IMPLEMENT_INT_VAR(function, var) \
-void ConfigFile::set##function(int var)\
+// bool
+#define IMPLEMENT_BOOL_VAR(var) \
+void ConfigFile::set##var(bool var)\
 {\
 	if (m_##var == var) return;\
 	\
 	m_##var = var;\
 }\
 \
-int ConfigFile::get##function() const\
+bool ConfigFile::get##var() const\
 {\
 	return m_##var;\
 }
 
-#define IMPLEMENT_BOOL_VAR(function, var) \
-void ConfigFile::set##function(bool var)\
+// generic class
+#define IMPLEMENT_CLASS_VAR(c, var) \
+void ConfigFile::set##var(const c &var)\
 {\
 	if (m_##var == var) return;\
 	\
 	m_##var = var;\
 }\
 \
-bool ConfigFile::get##function() const\
+c ConfigFile::get##var() const\
 {\
 	return m_##var;\
 }
+
+// specialized classes
+#define IMPLEMENT_QSTRING_VAR(var) IMPLEMENT_CLASS_VAR(QString, var)
+#define IMPLEMENT_QCOLOR_VAR(var) IMPLEMENT_CLASS_VAR(QColor, var)
+#define IMPLEMENT_QFONT_VAR(var) IMPLEMENT_CLASS_VAR(QFont, var)
+
+#define SAVE_INT_VAR(var) m_settings.setValue(#var, m_##var)
+#define SAVE_BOOL_VAR(var) m_settings.setValue(#var, m_##var)
+#define SAVE_QSTRING_VAR(var) m_settings.setValue(#var, m_##var)
+#define SAVE_QCOLOR_VAR(var) m_settings.setValue(#var, m_##var.name())
+#define SAVE_QFONT_VAR(var) m_settings.setValue(#var, m_##var.toString())
+
+#define LOAD_INT_VAR(var) m_##var = m_settings.value(#var, m_##var).toInt()
+#define LOAD_BOOL_VAR(var) m_##var = m_settings.value(#var, m_##var).toBool()
+#define LOAD_QSTRING_VAR(var) m_##var = m_settings.value(#var, m_##var).toString()
+#define LOAD_QCOLOR_VAR(var) m_##var.setNamedColor(m_settings.value(#var, m_##var).toString())
+#define LOAD_QFONT_VAR(var) m_##var.fromString(m_settings.value(#var, m_##var).toString())
+
+#define INIT_INT_VAR(var) m_##var = 0
+#define INIT_BOOL_VAR(var) m_##var = false
+#define INIT_QSTRING_VAR(var) m_##var.clear()
+#define INIT_QCOLOR_VAR(var) m_##var.setRgb(0, 0, 0)
+#define INIT_QFONT_VAR(var) m_##var = QFont()
 
 ConfigFile* ConfigFile::s_instance = NULL;
 
-ConfigFile::ConfigFile(QObject* parent):QObject(parent), m_settings(QSettings::IniFormat, QSettings::UserScope, AUTHOR, PRODUCT),
-	m_size(0, 0), m_position(0, 0)
+ConfigFile::ConfigFile(QObject* parent):QObject(parent), m_settings(QSettings::IniFormat, QSettings::UserScope, AUTHOR, PRODUCT), m_size(0, 0), m_position(0, 0)
 {
 	if (!s_instance) s_instance = this;
-
-	load();
 }
 
 ConfigFile::~ConfigFile()
@@ -97,26 +120,18 @@ bool ConfigFile::load()
 bool ConfigFile::loadVersion1()
 {
 	// general parameters
-	m_pathOngoing = m_settings.value("path_ongoing").toString();
-	m_pathArchived = m_settings.value("path_archived").toString();
 
-	m_useProxyFiles = m_settings.value("use_proxy_hd").toBool();
-	m_useProxyOthers = m_settings.value("use_proxy_others").toBool();
+	// image
+	LOAD_QCOLOR_VAR(OriginForegroundColor);
+	LOAD_QCOLOR_VAR(FinalForegroundColor);
 
-	m_userAgent = m_settings.value("user_agent_hd").toString();
+	// number
+	LOAD_QCOLOR_VAR(NumberColor);
+	LOAD_QFONT_VAR(NumberFont);
 
-	m_login = m_settings.value("login").toString();
-	m_password = m_settings.value("password").toString();
-
-	m_proxyFile = m_settings.value("proxy_file").toString();
-	m_proxyMd5 = m_settings.value("proxy_md5").toString();
-	m_proxyScript = m_settings.value("proxy_script").toString();
-	m_proxyOutput = m_settings.value("proxy_output").toString();
-	m_proxyIp = m_settings.value("proxy_ip").toString();
-	m_proxy = m_settings.value("proxy").toString();
-
-	m_lastIsbn = m_settings.value("last_ean").toString();
-	m_lastFilter = m_settings.value("last_filter").toString();
+	// symbol
+	LOAD_INT_VAR(SymbolSize);
+	LOAD_QCOLOR_VAR(SymbolColor);
 
 	// window parameters
 	m_settings.beginGroup("window");
@@ -137,26 +152,17 @@ bool ConfigFile::save()
 	// general parameters
 	m_settings.setValue("version", 1);
 
-	m_settings.setValue("path_ongoing", m_pathOngoing);
-	m_settings.setValue("path_archived", m_pathArchived);
+	// image
+	SAVE_QCOLOR_VAR(OriginForegroundColor);
+	SAVE_QCOLOR_VAR(FinalForegroundColor);
 
-	m_settings.setValue("use_proxy_hd", m_useProxyFiles);
-	m_settings.setValue("use_proxy_others", m_useProxyOthers);
+	// number
+	SAVE_QCOLOR_VAR(NumberColor);
+	SAVE_QFONT_VAR(NumberFont);
 
-	m_settings.setValue("user_agent_hd", m_userAgent);
-
-	m_settings.setValue("login", m_login);
-	m_settings.setValue("password", m_password);
-
-	m_settings.setValue("proxy_file", m_proxyFile);
-	m_settings.setValue("proxy_md5", m_proxyMd5);
-	m_settings.setValue("proxy_script", m_proxyScript);
-	m_settings.setValue("proxy_output", m_proxyOutput);
-	m_settings.setValue("proxy_ip", m_proxyIp);
-	m_settings.setValue("proxy", m_proxy);
-
-	m_settings.setValue("last_ean", m_lastIsbn);
-	m_settings.setValue("last_filter", m_lastFilter);
+	// symbol
+	SAVE_INT_VAR(SymbolSize);
+	SAVE_QCOLOR_VAR(SymbolColor);
 
 	// window parameters
 	m_settings.beginGroup("window");
@@ -171,26 +177,17 @@ bool ConfigFile::save()
 	return true;
 }
 
-IMPLEMENT_QSTRING_VAR(PathOngoing, pathOngoing);
-IMPLEMENT_QSTRING_VAR(PathArchived, pathArchived);
+// image
+IMPLEMENT_QCOLOR_VAR(OriginForegroundColor);
+IMPLEMENT_QCOLOR_VAR(FinalForegroundColor);
 
-IMPLEMENT_BOOL_VAR(UseProxyFiles, useProxyFiles);
-IMPLEMENT_BOOL_VAR(UseProxyOthers, useProxyOthers);
+// number
+IMPLEMENT_QCOLOR_VAR(NumberColor);
+IMPLEMENT_QFONT_VAR(NumberFont);
 
-IMPLEMENT_QSTRING_VAR(UserAgent, userAgent);
-
-IMPLEMENT_QSTRING_VAR(Login, login);
-IMPLEMENT_QSTRING_VAR(Password, password);
-
-IMPLEMENT_QSTRING_VAR(ProxyFile, proxyFile);
-IMPLEMENT_QSTRING_VAR(ProxyMd5, proxyMd5);
-IMPLEMENT_QSTRING_VAR(ProxyScript, proxyScript);
-IMPLEMENT_QSTRING_VAR(ProxyOutput, proxyOutput);
-IMPLEMENT_QSTRING_VAR(ProxyIp, proxyIp);
-IMPLEMENT_QSTRING_VAR(Proxy, proxy);
-
-IMPLEMENT_QSTRING_VAR(LastIsbn, lastIsbn);
-IMPLEMENT_QSTRING_VAR(LastFilter, lastFilter);
+// symbol
+IMPLEMENT_INT_VAR(SymbolSize);
+IMPLEMENT_QCOLOR_VAR(SymbolColor);
 
 QSize ConfigFile::getWindowSize() const
 {

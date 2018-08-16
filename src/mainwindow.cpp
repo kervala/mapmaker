@@ -39,13 +39,6 @@ MainWindow::MainWindow():QMainWindow(), m_logsDialog(NULL), m_scene(NULL), m_num
 {
 	setupUi(this);
 
-//	m_loginLabel = new QLabel(this);
-//	m_loginLabel->setText(tr("Not logged"));
-
-//	statusbar->addPermanentWidget(m_loginLabel);
-
-	new ConfigFile(this);
-
 	// init logs dialog
 	m_logsDialog = new LogsDialog(this);
 
@@ -150,13 +143,50 @@ MainWindow::MainWindow():QMainWindow(), m_logsDialog(NULL), m_scene(NULL), m_num
 	imageFrame->setVisible(false);
 	numberFrame->setVisible(false);
 	symbolFrame->setVisible(false);
+
+	// config file
+	ConfigFile *config = new ConfigFile(this);
+
+	// call this to initialize default values at first start
+	setConfigFileDefaultValues();
+
+	// load variables from config file
+	config->load();
+
+	QSize size = ConfigFile::getInstance()->getWindowSize();
+	if (!size.isNull()) resize(size);
+
+	QPoint pos = ConfigFile::getInstance()->getWindowPosition();
+	if (!pos.isNull()) move(pos);
+
+	// update values from config file
+	getConfigFileDefaultValues();
+
+	// initial values
+	onLoadProject();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 	hide();
 
+	setConfigFileDefaultValues();
+
 	event->accept();
+}
+
+void MainWindow::resizeEvent(QResizeEvent *e)
+{
+	ConfigFile::getInstance()->setWindowSize(e->size());
+
+	e->accept();
+}
+
+void MainWindow::moveEvent(QMoveEvent *e)
+{
+	ConfigFile::getInstance()->setWindowPosition(QPoint(x(), y()));
+
+	e->accept();
 }
 
 void MainWindow::initSupportedFormats(bool write)
@@ -186,6 +216,36 @@ void MainWindow::initSupportedFormats(bool write)
 	{
 		m_supportedReadFormats = supportedFormats;
 	}
+}
+
+void MainWindow::getConfigFileDefaultValues()
+{
+	// image
+	ImageMapItem::setOriginForegroundColor(ConfigFile::getInstance()->getOriginForegroundColor());
+	ImageMapItem::setFinalForegroundColor(ConfigFile::getInstance()->getFinalForegroundColor());
+
+	// number
+	NumberMapItem::setColor(ConfigFile::getInstance()->getNumberColor());
+	NumberMapItem::setFont(ConfigFile::getInstance()->getNumberFont());
+
+	// symbol
+	SymbolMapItem::setColor(ConfigFile::getInstance()->getSymbolColor());
+	SymbolMapItem::setSize(ConfigFile::getInstance()->getSymbolSize());
+}
+
+void MainWindow::setConfigFileDefaultValues()
+{
+	// image
+	ConfigFile::getInstance()->setOriginForegroundColor(ImageMapItem::getOriginForegroundColor());
+	ConfigFile::getInstance()->setFinalForegroundColor(ImageMapItem::getFinalForegroundColor());
+
+	// number
+	ConfigFile::getInstance()->setNumberColor(NumberMapItem::getColor());
+	ConfigFile::getInstance()->setNumberFont(NumberMapItem::getFont());
+
+	// symbol
+	ConfigFile::getInstance()->setSymbolColor(SymbolMapItem::getColor());
+	ConfigFile::getInstance()->setSymbolSize(SymbolMapItem::getSize());
 }
 
 void MainWindow::onNew()
