@@ -335,7 +335,15 @@ void MainWindow::onLogs(bool on)
 
 void MainWindow::onAbout()
 {
-	QMessageBox::about(this, tr("About %1 %2 by %3").arg(PRODUCT).arg(VERSION).arg(AUTHOR), tr("Map editor"));
+	QString br("<br>");
+
+	QMessageBox::about(this,
+		tr("About %1 %2").arg(QApplication::applicationName()).arg(QApplication::applicationVersion()),
+		tr("MapMaker is a tool to compose maps from different images and annote them.") +
+		br + br +
+		tr("Author: %1").arg("<a href=\"http://kervala.deviantart.com\">Kervala</a><br>") +
+		tr("Homepage: %1").arg("<a href=\"http://kervala.deviantart.com/art/MapMaker-387332272\">DeviantArt</a><br>") +
+		tr("Support: %1").arg("<a href=\"http://dev.kervala.net/projects/mapmaker\">http://dev.kervala.net/projects/mapmaker</a>"));
 }
 
 void MainWindow::onAboutQt()
