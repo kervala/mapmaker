@@ -645,6 +645,11 @@ bool MapScene::exportImage(const QString& filename)
 		image = pixmap;
 	}
 
+	// unselect all items
+	QList<QGraphicsItem*> selection = selectedItems();
+
+	foreach(QGraphicsItem *item, selection) item->setSelected(false);
+
 	// paint the scene content on the image
 	QPainter painter;
 //	painter.setWindow(dstRect.toRect());
@@ -652,6 +657,9 @@ bool MapScene::exportImage(const QString& filename)
 	painter.begin(image);
 	render(&painter, dstRect, srcRect);
 	painter.end();
+
+	// reselect all selected items
+	foreach(QGraphicsItem *item, selection) item->setSelected(true);
 
 	delete image;
 
