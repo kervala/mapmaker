@@ -612,8 +612,8 @@ bool MapScene::exportImage(const QString& filename)
 		// create a SVG file
 		svgGenerator = new QSvgGenerator();
 		svgGenerator->setFileName(filename);
-		svgGenerator->setTitle(tr("Neolinks SVG Generator"));
-		svgGenerator->setDescription(tr("A whiteboard exported as SVG."));
+		svgGenerator->setTitle(tr("MapMaker SVG Generator"));
+		svgGenerator->setDescription(tr("A MapMaker map exported as SVG"));
 		svgGenerator->setSize(srcRect.size().toSize());
 		svgGenerator->setViewBox(dstRect);
 
