@@ -277,55 +277,50 @@ bool MapScene::save(const QString &filename)
 	stream << m_nextNumber;
 	stream << m_nextId;
 
-	qint32 imagesCount = 0;
-	qint32 numbersCount = 0;
-	qint32 symbolsCount = 0;
+	QList<ImageMapItem *> images;
+	QList<NumberMapItem *> numbers;
+	QList<SymbolMapItem *> symbols;
 
 	foreach(QGraphicsItem *item, items())
 	{
-		ImageMapItem *imageItem = qgraphicsitem_cast<ImageMapItem*>(item);
-		NumberMapItem *numberItem = qgraphicsitem_cast<NumberMapItem*>(item);
-		SymbolMapItem *symbolItem = qgraphicsitem_cast<SymbolMapItem*>(item);
-
-		if (imageItem) ++imagesCount;
-		if (numberItem) ++numbersCount;
-		if (symbolItem) ++symbolsCount;
-	}
-
-	stream << imagesCount;
-
-	foreach(QGraphicsItem *item, items())
-	{
-		ImageMapItem *imageItem = qgraphicsitem_cast<ImageMapItem*>(item);
-
-		if (imageItem)
+		switch (item->type())
 		{
-			stream << *imageItem;
+			case ImageMapItem::Type:
+				images << qgraphicsitem_cast<ImageMapItem*>(item);
+				break;
+
+			case NumberMapItem::Type:
+				numbers << qgraphicsitem_cast<NumberMapItem*>(item);
+				break;
+
+			case SymbolMapItem::Type:
+				symbols << qgraphicsitem_cast<SymbolMapItem*>(item);
+				break;
+
+			default:
+				qDebug() << "Unknown item";
 		}
 	}
 
-	stream << numbersCount;
+	stream << images.size();
 
-	foreach(QGraphicsItem *item, items())
+	foreach(ImageMapItem *item, images)
 	{
-		NumberMapItem *numberItem = qgraphicsitem_cast<NumberMapItem*>(item);
-
-		if (numberItem)
-		{
-			stream << *numberItem;
-		}
+		stream << *item;
 	}
 
-	stream << symbolsCount;
+	stream << numbers.size();
 
-	foreach(QGraphicsItem *item, items())
+	foreach(NumberMapItem *item, numbers)
 	{
-		SymbolMapItem *symbolItem = qgraphicsitem_cast<SymbolMapItem*>(item);
+		stream << *item;
+	}
 
-		if (symbolItem)
-		{
-			stream << *symbolItem;
-		}
+	stream << symbols.size();
+
+	foreach(SymbolMapItem *item, symbols)
+	{
+		stream << *item;
 	}
 
 	return true;
