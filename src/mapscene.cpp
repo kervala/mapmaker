@@ -382,6 +382,17 @@ SymbolMapItem::Symbol MapScene::getCurrentSymbol() const
 void MapScene::setCurrentSymbol(SymbolMapItem::Symbol symbol)
 {
 	m_currentSymbol = symbol;
+
+	// no item selected, don't do anything
+	if (selectedItems().isEmpty()) return;
+
+	// change selected symbol
+	SymbolMapItem *item = qgraphicsitem_cast<SymbolMapItem*>(selectedItems().front());
+
+	if (item)
+	{
+		item->setSymbol(symbol);
+	}
 }
 
 void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
