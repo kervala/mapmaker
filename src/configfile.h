@@ -81,6 +81,9 @@ public:
 	QPoint getWindowPosition() const;
 	void setWindowPosition(const QPoint &pos);
 
+	bool isMaximized() const;
+	void setMaximized(bool maximized);
+
 public slots:
 	bool load();
 	bool save();
@@ -94,6 +97,7 @@ private:
 
 	QSize m_size;
 	QPoint m_position;
+	bool m_maximized;
 };
 
 #endif

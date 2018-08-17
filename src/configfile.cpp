@@ -96,7 +96,7 @@ c ConfigFile::get##var() const\
 
 ConfigFile* ConfigFile::s_instance = NULL;
 
-ConfigFile::ConfigFile(QObject* parent):QObject(parent), m_settings(QSettings::IniFormat, QSettings::UserScope, AUTHOR, PRODUCT), m_size(0, 0), m_position(0, 0)
+ConfigFile::ConfigFile(QObject* parent):QObject(parent), m_settings(QSettings::IniFormat, QSettings::UserScope, AUTHOR, PRODUCT), m_size(0, 0), m_position(0, 0), m_maximized(false)
 {
 	if (!s_instance) s_instance = this;
 }
@@ -141,6 +141,7 @@ bool ConfigFile::loadVersion1()
 
 	m_size = QSize(m_settings.value("width", 0).toInt(), m_settings.value("height", 0).toInt());
 	m_position = QPoint(m_settings.value("x", 0).toInt(), m_settings.value("y", 0).toInt());
+	m_maximized = m_settings.value("maximized", false).toBool();
 
 	m_settings.endGroup();
 
@@ -177,6 +178,7 @@ bool ConfigFile::save()
 	m_settings.setValue("height", m_size.height());
 	m_settings.setValue("x", m_position.x());
 	m_settings.setValue("y", m_position.y());
+	m_settings.setValue("maximized", m_maximized);
 
 	m_settings.endGroup();
 
@@ -220,4 +222,14 @@ void ConfigFile::setWindowPosition(const QPoint &pos)
 	if (m_position == pos || pos.isNull()) return;
 
 	m_position = pos;
+}
+
+bool ConfigFile::isMaximized() const
+{
+	return m_maximized;
+}
+
+void ConfigFile::setMaximized(bool maximized)
+{
+	m_maximized = maximized;
 }

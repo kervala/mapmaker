@@ -88,15 +88,20 @@ public slots:
 	void setWarning(const QString &error);
 	void setInfo(const QString &error);
 
+	void doSaveWindowParameters();
+
 protected:
 	void closeEvent(QCloseEvent *e);
 	void resizeEvent(QResizeEvent *e);
 	void moveEvent(QMoveEvent *e);
+	void changeEvent(QEvent* e);
 
 	void initSupportedFormats(bool write);
 
 	void getConfigFileDefaultValues();
 	void setConfigFileDefaultValues();
+
+	void saveWindowParameters();
 
 	LogsDialog *m_logsDialog;
 	MapScene *m_scene;
@@ -108,6 +113,8 @@ protected:
 
 	QString m_supportedReadFormats;
 	QString m_supportedWriteFormats;
+
+	QTimer m_windowTimer;
 };
 
 #endif

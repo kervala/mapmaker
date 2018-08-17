@@ -163,11 +163,17 @@ MainWindow::MainWindow():QMainWindow(), m_logsDialog(NULL), m_scene(NULL), m_num
 	QPoint pos = ConfigFile::getInstance()->getWindowPosition();
 	if (!pos.isNull()) move(pos);
 
+	if (ConfigFile::getInstance()->isMaximized()) showMaximized();
+
 	// update values from config file
 	getConfigFileDefaultValues();
 
 	// initial values
 	onLoadProject();
+
+	m_windowTimer.setSingleShot(true);
+
+	connect(&m_windowTimer, SIGNAL(timeout()), this, SLOT(doSaveWindowParameters()));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -181,16 +187,69 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::resizeEvent(QResizeEvent *e)
 {
-	ConfigFile::getInstance()->setWindowSize(e->size());
+//	qDebug() << "resizeEvent maximized ?" << ConfigFile::getInstance()->isMaximized();
+
+	saveWindowParameters();
+//	ConfigFile::getInstance()->setWindowSize(e->size());
 
 	e->accept();
 }
 
 void MainWindow::moveEvent(QMoveEvent *e)
 {
-	ConfigFile::getInstance()->setWindowPosition(QPoint(x(), y()));
+//	qDebug() << "moveEvent maximized ?" << ConfigFile::getInstance()->isMaximized();
+
+	saveWindowParameters();
+//	ConfigFile::getInstance()->setWindowPosition(QPoint(x(), y()));
 
 	e->accept();
+}
+
+void MainWindow::changeEvent(QEvent* e)
+{
+	if (e->type() == QEvent::WindowStateChange)
+	{
+		QWindowStateChangeEvent* se = static_cast<QWindowStateChangeEvent*>(e);
+
+		if (se->oldState() == Qt::WindowNoState && windowState() == Qt::WindowMaximized)
+		{
+//			ConfigFile::getInstance()->setMaximized(true);
+			saveWindowParameters();
+		}
+		else
+		{
+//			ConfigFile::getInstance()->setMaximized(false);
+			saveWindowParameters();
+		}
+	}
+}
+
+void MainWindow::saveWindowParameters()
+{
+	// disable previous timers
+	if (m_windowTimer.isActive()) m_windowTimer.stop();
+
+	// save window parameters with a delay
+	m_windowTimer.start(250);
+}
+
+void MainWindow::doSaveWindowParameters()
+{
+	// never save parameters when minimized
+	if (isMinimized()) return;
+
+	if (isMaximized())
+	{
+		// if maximized, don't save windows position and size
+		ConfigFile::getInstance()->setMaximized(true);
+	}
+	else
+	{
+		ConfigFile::getInstance()->setMaximized(false);
+
+		ConfigFile::getInstance()->setWindowPosition(pos());
+		ConfigFile::getInstance()->setWindowSize(size());
+	}
 }
 
 void MainWindow::initSupportedFormats(bool write)
