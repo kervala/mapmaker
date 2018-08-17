@@ -52,6 +52,52 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="zoomButton">
+            <property name="toolTip">
+             <string>Zoom</string>
+            </property>
+            <property name="text">
+             <string>Zoom</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/zoom.png</normaloff>:/icons/zoom.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="imageButton">
+            <property name="toolTip">
+             <string>Add image</string>
+            </property>
+            <property name="text">
+             <string>Image</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/resources.qrc">
+              <normaloff>:/icons/image.png</normaloff>:/icons/image.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="numberButton">
             <property name="toolTip">
              <string>Add number tool</string>
@@ -557,7 +603,7 @@
            <item>
             <layout class="QHBoxLayout" name="imageButtonsHorizontalLayout">
              <item>
-              <widget class="QToolButton" name="imageButton">
+              <widget class="QToolButton" name="changeImageButton">
                <property name="toolTip">
                 <string>Add/change an image</string>
                </property>
@@ -752,9 +798,10 @@
  <tabstops>
   <tabstop>graphicsView</tabstop>
   <tabstop>selectButton</tabstop>
+  <tabstop>zoomButton</tabstop>
+  <tabstop>imageButton</tabstop>
   <tabstop>numberButton</tabstop>
   <tabstop>symbolButton</tabstop>
-  <tabstop>zoomButton</tabstop>
   <tabstop>xEdit</tabstop>
   <tabstop>yEdit</tabstop>
   <tabstop>validatePositionButton</tabstop>
@@ -774,7 +821,7 @@
   <tabstop>symbolSizeSpinBox</tabstop>
   <tabstop>symbolColorButton</tabstop>
   <tabstop>imageEdit</tabstop>
-  <tabstop>imageButton</tabstop>
+  <tabstop>changeImageButton</tabstop>
   <tabstop>originForegroundColorButton</tabstop>
   <tabstop>finalForegroundColorButton</tabstop>
  </tabstops>

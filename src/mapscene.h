@@ -30,6 +30,7 @@ public:
 	enum Mode
 	{
 		ModeSelect,
+		ModeImage,
 		ModeNumber,
 		ModeSymbol,
 		ModeZoom
@@ -80,6 +81,7 @@ public:
 
 signals:
 	void itemDetailsChanged(const MapItem::Details &details);
+	void imageAdded(const QPointF &pos);
 	void zoomChanged(qreal zoom);
 	void sceneSizeUpdated();
 	void projectLoaded();

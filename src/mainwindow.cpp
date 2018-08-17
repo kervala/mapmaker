@@ -61,6 +61,7 @@ MainWindow::MainWindow():QMainWindow(), m_logsDialog(NULL), m_scene(NULL), m_num
 
 	// tool bars
 	connect(selectButton, SIGNAL(clicked()), this, SLOT(onSelectButton()));
+	connect(imageButton, SIGNAL(clicked()), this, SLOT(onImageButton()));
 	connect(numberButton, SIGNAL(clicked()), this, SLOT(onNumberButton()));
 	connect(symbolButton, SIGNAL(clicked()), this, SLOT(onSymbolButton()));
 	connect(zoomButton, SIGNAL(clicked()), this, SLOT(onZoomButton()));
@@ -129,6 +130,7 @@ MainWindow::MainWindow():QMainWindow(), m_logsDialog(NULL), m_scene(NULL), m_num
 
 	// scene
 	connect(m_scene, SIGNAL(itemDetailsChanged(MapItem::Details)), this, SLOT(onItemDetailsChanged(MapItem::Details)));
+	connect(m_scene, SIGNAL(imageAdded(QPointF)), this, SLOT(onImageAdded(QPointF)));
 	connect(m_scene, SIGNAL(zoomChanged(qreal)), this, SLOT(onZoomChanged(qreal)));
 	connect(m_scene, SIGNAL(projectLoaded()), this, SLOT(onLoadProject()));
 
@@ -361,6 +363,16 @@ void MainWindow::onSelectButton()
 	onItemDetailsChanged(details);
 }
 
+void MainWindow::onImageButton()
+{
+	m_scene->setMode(MapScene::ModeImage);
+
+	MapItem::Details details;
+	details.type = MapItem::Image;
+
+	onItemDetailsChanged(details);
+}
+
 void MainWindow::onNumberButton()
 {
 	m_scene->setMode(MapScene::ModeNumber);
@@ -393,7 +405,7 @@ void MainWindow::onZoomButton()
 	onItemDetailsChanged(details);
 }
 
-void MainWindow::onImageButton()
+void MainWindow::onChangeImageButton()
 {
 	QString filename = imageEdit->text();
 
@@ -608,6 +620,25 @@ void MainWindow::onItemDetailsChanged(const MapItem::Details &details)
 			numberFrame->setVisible(true);
 			symbolFrame->setVisible(false);
 		}
+	}
+}
+
+void MainWindow::onImageAdded(const QPointF &pos)
+{
+	QString filename = ConfigFile::getInstance()->getLastDirectory();
+
+	filename = QFileDialog::getOpenFileName(this, tr("Select image"), filename, m_supportedReadFormats);
+
+	if (filename.isEmpty())
+		return;
+
+	if (!m_scene->importImage(filename, pos))
+	{
+		setError(tr("Unable to open image %1").arg(filename));
+	}
+	else
+	{
+		ConfigFile::getInstance()->setLastDirectory(QFileInfo(filename).absolutePath());
 	}
 }
 

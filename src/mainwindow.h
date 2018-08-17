@@ -67,6 +67,8 @@ public slots:
 	void onIncrementButton();
 	void onFontButton();
 	void onNumberColorButton();
+
+	void onChangeImageButton();
 	void onOriginForegroundColorButton();
 	void onFinalForegroundColorButton();
 	void onSymbolImageButton();
@@ -74,7 +76,8 @@ public slots:
 
 	void onSymbolSizeChanged(int size);
 	void onItemDetailsChanged(const MapItem::Details &details);
-	void onZoomChanged(qreal);
+	void onImageAdded(const QPointF &pos);
+	void onZoomChanged(qreal zoom);
 	void onLoadProject();
 
 	void setError(const QString &error);

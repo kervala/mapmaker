@@ -408,7 +408,7 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 			ImageMapItem *parentItem = qgraphicsitem_cast<ImageMapItem*>(wbItem);
 
-			// only allow to put numbers on images
+			// only allow to put numbers or symbols on images
 			if (parentItem)
 			{
 				MapItem *item = NULL;
@@ -441,6 +441,12 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 					mustProcess = false;
 				}
+			}
+			else if (m_mode == ModeImage)
+			{
+				emit imageAdded(mouseEvent->scenePos());
+
+				mustProcess = false;
 			}
 		}
 	}
