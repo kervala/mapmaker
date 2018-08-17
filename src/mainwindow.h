@@ -62,7 +62,10 @@ public slots:
 	void onSymbolButton();
 	void onZoomButton();
 	void onImageButton();
-	void onValidateButton();
+
+	void onValidatePositionButton();
+
+	void onValidateNumberButton();
 	void onRecomputeButton();
 	void onIncrementButton();
 	void onFontButton();

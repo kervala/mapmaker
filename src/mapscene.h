@@ -63,6 +63,8 @@ public:
 	SymbolMapItem::Symbol getCurrentSymbol() const;
 	void setCurrentSymbol(SymbolMapItem::Symbol symbol);
 
+	void validatePosition(int x, int y);
+
 	void updateNumbers();
 	void updateImages();
 	void updateSymbols();

@@ -717,6 +717,19 @@ void MapScene::updateImages()
 	}
 }
 
+void MapScene::validatePosition(int x, int y)
+{
+	// no selected items
+	if (selectedItems().isEmpty()) return;
+
+	QGraphicsItem *item = selectedItems().front();
+
+	if (item)
+	{
+		item->setPos(QPoint(x, y));
+	}
+}
+
 void MapScene::recomputeNumbers()
 {
 	QVector<QVector<NumberMapItem*> > numberItems;

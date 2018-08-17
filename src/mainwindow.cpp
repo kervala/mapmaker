@@ -66,8 +66,14 @@ MainWindow::MainWindow():QMainWindow(), m_logsDialog(NULL), m_scene(NULL), m_num
 	connect(symbolButton, SIGNAL(clicked()), this, SLOT(onSymbolButton()));
 	connect(zoomButton, SIGNAL(clicked()), this, SLOT(onZoomButton()));
 
+	// position button
+	connect(validatePositionButton, SIGNAL(clicked()), this, SLOT(onValidatePositionButton()));
+
+	// images
+	connect(changeImageButton, SIGNAL(clicked()), this, SLOT(onChangeImageButton()));
+
 	// numbers
-	connect(validateNumberButton, SIGNAL(clicked()), this, SLOT(onValidateButton()));
+	connect(validateNumberButton, SIGNAL(clicked()), this, SLOT(onValidateNumberButton()));
 	connect(recomputeButton, SIGNAL(clicked()), this, SLOT(onRecomputeButton()));
 	connect(incrementButton, SIGNAL(clicked()), this, SLOT(onIncrementButton()));
 	connect(fontButton, SIGNAL(clicked()), this, SLOT(onFontButton()));
@@ -430,7 +436,15 @@ void MainWindow::onChangeImageButton()
 	}
 }
 
-void MainWindow::onValidateButton()
+void MainWindow::onValidatePositionButton()
+{
+	int x = xEdit->text().toInt();
+	int y = yEdit->text().toInt();
+
+	if (x > -1 && y > -1) m_scene->validatePosition(x, y);
+}
+
+void MainWindow::onValidateNumberButton()
 {
 	int number = numberEdit->text().toInt();
 
