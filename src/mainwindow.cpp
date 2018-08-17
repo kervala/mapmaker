@@ -350,7 +350,7 @@ void MainWindow::onAbout()
 		tr("MapMaker is a tool to compose maps from different images and annote them.") +
 		br + br +
 		tr("Author: %1").arg("<a href=\"http://kervala.deviantart.com\">Kervala</a><br>") +
-		tr("Homepage: %1").arg("<a href=\"http://kervala.deviantart.com/art/MapMaker-387332272\">DeviantArt</a><br>") +
+		tr("Homepage: %1").arg("<a href=\"https://www.deviantart.com/kervala/art/MapMaker-by-Kervala-759684325\">DeviantArt</a><br>") +
 		tr("Support: %1").arg("<a href=\"http://dev.kervala.net/projects/mapmaker\">http://dev.kervala.net/projects/mapmaker</a>"));
 }
 
