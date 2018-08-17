@@ -42,9 +42,6 @@ void ImageMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 {
 	painter->save();
 
-	// to speed up drawing of image while resizing or rotating
-//	painter->setRenderHint(QPainter::SmoothPixmapTransform, true); // put to false while resizing
-
 	if (m_svg.isValid())
 	{
 		m_svg.render(painter, m_rect);
@@ -127,7 +124,7 @@ QVariant ImageMapItem::itemChange(GraphicsItemChange change, const QVariant &val
 			mustUpdateSceneSize = true;
 		}
 
-		if (mustUpdateSceneSize) emit qobject_cast<MapScene*>(scene())->updateSceneSize();
+		if (mustUpdateSceneSize) emit qobject_cast<MapScene*>(scene())->sceneSizeUpdated();
 
 		if (changed) return p1;
 	}

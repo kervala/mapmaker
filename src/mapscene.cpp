@@ -883,7 +883,7 @@ void MapScene::updateSceneSize()
 {
 	// increase size of the scene
 	QSizeF oldSize = sceneRect().size();
-	QSizeF newSize = itemsBoundingRect().size() + QSizeF(1000, 1000);
+	QSizeF newSize = QSizeF(itemsBoundingRect().right(), itemsBoundingRect().bottom()) + QSizeF(1000, 1000);
 
 	setSceneRect(QRectF(QPointF(0, 0), newSize));
 

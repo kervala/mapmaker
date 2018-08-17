@@ -74,8 +74,6 @@ public:
 	void incrementNumber(int number);
 	void decrementNumber(int number);
 
-	void updateSceneSize();
-
 	static QList<QByteArray> getImagesFormats(bool write);
 
 	static bool isImage(const QString &filename);
@@ -90,6 +88,7 @@ signals:
 
 public slots:
 	void onSelectionChanged();
+	void updateSceneSize();
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
