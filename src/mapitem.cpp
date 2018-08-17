@@ -70,12 +70,6 @@ MapItem::Details MapItem::getDetails() const
 
 void MapItem::drawSelection(QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
-	const QRectF murect = painter->transform().mapRect(QRectF(0, 0, 1, 1));
-	if (qFuzzyIsNull(qMax(murect.width(), murect.height()))) return;
-
-	const QRectF mbrect = painter->transform().mapRect(boundingRect());
-	if (qMin(mbrect.width(), mbrect.height()) < qreal(1.0)) return;
-
 	const qreal penWidth = 0; // cosmetic pen
 	const QColor fgcolor = option->palette.windowText().color();
 

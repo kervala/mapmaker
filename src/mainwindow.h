@@ -74,6 +74,7 @@ public slots:
 	void onChangeImageButton();
 	void onOriginForegroundColorButton();
 	void onFinalForegroundColorButton();
+
 	void onSymbolImageButton();
 	void onSymbolColorButton();
 

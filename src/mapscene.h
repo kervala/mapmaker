@@ -68,8 +68,8 @@ public:
 	void updateNumbers();
 	void updateImages();
 	void updateSymbols();
-	void recomputeNumbers();
 
+	void recomputeNumbers();
 	void validateNumber(int number);
 	void incrementNumber(int number);
 	void decrementNumber(int number);
