@@ -343,14 +343,14 @@ void MainWindow::onOpen()
 
 void MainWindow::onSave()
 {
+	bool saved = false;
+
 	if (m_scene->hasFilename())
 	{
-		m_scene->save();
+		if (m_scene->save()) saved = true;
 	}
-	else
-	{
-		onSaveAs();
-	}
+
+	if (!saved) onSaveAs();
 }
 
 void MainWindow::onSaveAs()
