@@ -28,6 +28,41 @@
 QColor ImageMapItem::s_originForegroundColor;
 QColor ImageMapItem::s_finalForegroundColor;
 
+static QString compressColor(const QString &color)
+{
+	QString res = "#";
+
+	// color using format #rrggbb or #rrggbbaa
+	if (color.size() == 7 || color.size() == 9)
+	{
+		if (color[1] == color[2] && color[3] == color[4] && color[5] == color[6])
+		{
+			res += color[1];
+			res += color[3];
+			res += color[5];
+
+			if (color.size() == 9)
+			{
+				if (color[7] == color[8])
+				{
+					res += color[7];
+				}
+				else
+				{
+					// don't compress
+					return color;
+				}
+			}
+
+			// compress
+			return res;
+		}
+	}
+
+	// don't compress
+	return color;
+}
+
 ImageMapItem::ImageMapItem(QGraphicsItem *parent):MapItem(parent)
 {
 	// placeholder
@@ -181,9 +216,15 @@ bool ImageMapItem::updateImage()
 		if (s_finalForegroundColor.isValid())
 		{
 			QString srcColor = s_originForegroundColor.name();
+			QString compressedSrcColor = compressColor(srcColor);
 			QString dstColor = s_finalForegroundColor.name();
 
-			xml.replace(":" + srcColor, ":" + dstColor);
+			xml.replace(srcColor, dstColor);
+
+			if (compressedSrcColor != srcColor)
+			{
+				xml.replace(compressedSrcColor, dstColor);
+			}
 		}
 
 		if (!m_svg.load(xml.toUtf8())) return false;
