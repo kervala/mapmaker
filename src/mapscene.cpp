@@ -879,6 +879,27 @@ void MapScene::decrementNumber(int number)
 {
 }
 
+void MapScene::changeNumbersOffset(int x, int y)
+{
+	QList<QGraphicsItem*> sitems = items();
+
+	QPointF offset(x, y);
+
+	NumberMapItem *sitem = NULL;
+
+	foreach(QGraphicsItem *item, sitems)
+	{
+		sitem = qgraphicsitem_cast<NumberMapItem*>(item);
+
+		if (sitem)
+		{
+			sitem->setPos(sitem->pos() + offset);
+		}
+	}
+
+	updateNumbers();
+}
+
 void MapScene::updateSceneSize()
 {
 	// increase size of the scene

@@ -73,6 +73,7 @@ public:
 	void validateNumber(int number);
 	void incrementNumber(int number);
 	void decrementNumber(int number);
+	void changeNumbersOffset(int x, int y);
 
 	static QList<QByteArray> getImagesFormats(bool write);
 

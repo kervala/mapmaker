@@ -77,6 +77,7 @@ MainWindow::MainWindow():QMainWindow(), m_logsDialog(NULL), m_scene(NULL), m_num
 	connect(recomputeButton, SIGNAL(clicked()), this, SLOT(onRecomputeButton()));
 	connect(incrementButton, SIGNAL(clicked()), this, SLOT(onIncrementButton()));
 	connect(fontButton, SIGNAL(clicked()), this, SLOT(onFontButton()));
+	connect(validateOffsetButton, SIGNAL(clicked()), this, SLOT(onValidateOffsetButton()));
 
 	// symbols
 	connect(symbolCrossButton, SIGNAL(clicked()), this, SLOT(onSymbolImageButton()));
@@ -501,6 +502,18 @@ void MainWindow::onValidatePositionButton()
 	int y = yEdit->text().toInt();
 
 	if (x > -1 && y > -1) m_scene->validatePosition(x, y);
+}
+
+void MainWindow::onValidateOffsetButton()
+{
+	int x = xNumberSpinBox->text().toInt();
+	int y = yNumberSpinBox->text().toInt();
+
+	m_scene->changeNumbersOffset(x, y);
+
+	// reset values in spin boxes
+	xNumberSpinBox->setValue(0);
+	yNumberSpinBox->setValue(0);
 }
 
 void MainWindow::onValidateNumberButton()

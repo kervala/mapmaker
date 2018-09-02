@@ -65,6 +65,7 @@ public slots:
 
 	void onValidatePositionButton();
 
+	void onValidateOffsetButton();
 	void onValidateNumberButton();
 	void onRecomputeButton();
 	void onIncrementButton();

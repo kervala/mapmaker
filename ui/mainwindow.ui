@@ -336,6 +336,43 @@
               </widget>
              </item>
              <item>
+              <widget class="QSpinBox" name="xNumberSpinBox">
+               <property name="minimum">
+                <number>-100</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="yNumberSpinBox">
+               <property name="minimum">
+                <number>-100</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="validateOffsetButton">
+               <property name="toolTip">
+                <string>Validate offset</string>
+               </property>
+               <property name="text">
+                <string>Validate offset</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../res/resources.qrc">
+                 <normaloff>:/icons/validate.png</normaloff>:/icons/validate.png</iconset>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
               <spacer name="numberHorizontalSpacer">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
