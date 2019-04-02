@@ -673,6 +673,10 @@ bool MapScene::exportImage(const QString& filename)
 	// reselect all selected items
 	foreach(QGraphicsItem *item, selection) item->setSelected(true);
 
+	// save the image
+	bool res = pixmap ? pixmap->save(filename):true;
+
+	// delete image after saving it
 	delete image;
 
 	// save the image
