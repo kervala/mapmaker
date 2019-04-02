@@ -1,3 +1,21 @@
+#
+#  MapMaker is a map editor
+#  Copyright (C) 2018  Cedric OCHS
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.7)
 
 # Allows qtmain to be linked auto
@@ -58,8 +76,7 @@ FILE(GLOB UI ui/*.ui)
 FILE(GLOB RES res/*.qrc res/*.icns res/*.ico)
 FILE(GLOB TS translations/*.ts)
 
-SET_TARGET_GUI_EXECUTABLE(${TARGET} ${SRC} ${RES} ${UI} ${HEADER} ${TS})
-SET_TARGET_LABEL(${TARGET} ${PRODUCT})
+SET_TARGET_GUI_EXECUTABLE(${TARGET} ${SRC} ${RES} ${UI} ${HEADER} ${TS} NAME ${PRODUCT} LABEL ${PRODUCT})
 
 IF(APPLE)
   SET(MACOSX_BUNDLE_GUI_IDENTIFIER "net.kervala.${TARGET}")
