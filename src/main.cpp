@@ -62,8 +62,6 @@ int main(int argc, char *argv[])
 	_CrtSetDbgFlag (_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	Q_INIT_RESOURCE(resources);
-
 #if defined(Q_OS_WIN32) || defined(Q_OS_MAC)
 	QScopedPointer<QCoreApplication> app(new QApplication(argc, argv));
 #else
@@ -80,7 +78,14 @@ int main(int argc, char *argv[])
 	QDir dir(QCoreApplication::applicationDirPath());
 	
 #if defined(Q_OS_WIN32)
+
+#ifdef _DEBUG
+	dir.cdUp();
+	dir.cdUp();
+#endif
+
 	folder = dir.absolutePath();
+
 #else
 	dir.cdUp();
 
