@@ -679,8 +679,27 @@ bool MapScene::exportImage(const QString& filename)
 	// delete image after saving it
 	delete image;
 
-	// save the image
-	return pixmap ? pixmap->save(filename):true;
+	// fix SVG file
+	if (!pixmap && ext == "svg")
+	{
+		QFile file(filename);
+
+		if (file.open(QFile::ReadOnly))
+		{
+			QByteArray data = file.readAll();
+
+			data.replace("stroke-dasharray=\"8,4\" stroke-dashoffset=\"3.9\"", "stroke-dasharray=\"2.1199999,1.05999995\" stroke-dashoffset=\"1.03349996\"");
+
+			file.close();
+
+			if (file.open(QFile::WriteOnly))
+			{
+				file.write(data);
+			}
+		}
+	}
+
+	return res;
 }
 
 void MapScene::updateNumbers()
