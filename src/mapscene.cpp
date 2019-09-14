@@ -121,7 +121,7 @@ bool MapScene::load(const QString &filename)
 	// define version for items and other serialized objects
 	stream.device()->setProperty("version", version);
 
-	if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+	if (QT_VERSION < QT_VERSION_CHECK(5, 6, 0))
 	{
 		stream.setVersion(QDataStream::Qt_5_4);
 	}
@@ -266,7 +266,7 @@ bool MapScene::save(const QString &filename)
 	stream << s_header.num;
 	stream << s_version;
 
-	if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+	if (QT_VERSION < QT_VERSION_CHECK(5, 6, 0))
 	{
 		stream.setVersion(QDataStream::Qt_5_4);
 	}
